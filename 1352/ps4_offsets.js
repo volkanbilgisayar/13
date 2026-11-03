@@ -1,47 +1,3 @@
-export const REQUIRED_KEYS = [
-  "fw_status",
-  "wk_expm1_builtin",
-  "wk_JSFunction_m_function",
-  "wk_POP_RDI_RET",
-  "wk_POP_RSI_RET",
-  "wk_POP_RDX_RET",
-  "wk_POP_RCX_RET",
-  "wk_POP_RAX_RET",
-  "wk_POP_R8_RET",
-  "wk_POP_R9_RET",
-  "wk_LEAVE_RET",
-  "wk_MOV_QWORD_PTR_RDI_RAX_RET",
-  "wk_MOV_RDI_RSI_30_CALL",
-  "wk_POP_RAX_MOV_RAX_JMP_18",
-  "wk_PUSH_RBP_MOV_RBP_RSP_10",
-  "wk_MOV_RDI_RAX_8_CALL_20",
-  "wk_MOV_RDX_RAX_18_CALL_10",
-  "wk_PUSH_RDX_POP_RSP_RET",
-  "pivot_view_sp",
-  "wk_ArrayBuffer_m_impl",
-  "wk_ArrayBuffer_m_contents_m_data",
-  "wk___imp___error",
-  "k__error",
-  "k_scan_stage1",
-  "k_scan_stage2",
-  "k_evf_cv",
-  "k_sysent_661",
-  "k_jmp_rsi",
-];
-export const OPTIONAL_KEYS = [
-  "k_stubs",
-  "wk___imp_pthread_create",
-  "k_pthread_create",
-
-  "kpatch",
-
-  "payload",
-
-  "alias_of",
-
-  "k_idt_rsvd",
-];
-
 export const PS4 = {
   "11.00": {
     fw_status: "state=proven step4q=90/0 reboot=0 kernel_rvas=5/5-vs-dump",
@@ -339,7 +295,7 @@ export const PS4 = {
     k_sysent_661: 0x110a760,
     k_jmp_rsi: 0x47b31,
 
-    payload: "goldhen.bin",
+    payload: "payload.bin",
     k_oid_kern_file: 0x1a2f8a0,
     k_oid_maxfilesperproc: 0x1a2f950,
     k_oid_maxprocperuid: 0x1a3ba88,
@@ -444,7 +400,7 @@ PS4["13.50"] = {
   fw_status:
     "state=663-JB-PROVEN-on-hw webkit=13.00-module libkernel=13.50-stubs " +
     "kernel_rvas=MEASURED-from-kernel_1350.elf (kderive 16/16, adversarial 16/16 GO) " +
-    "kpatch=1350.bin-BUILT-10/10-neg-controls-pass-UNTESTED-on-hw payload=goldhen.bin-PS4HEN(works<=13.52) bug=663",
+    "kpatch=1350.bin-BUILT-10/10-neg-controls-pass-UNTESTED-on-hw payload=payload2.bin-PS4HEN(works<=13.52) bug=663",
 
   wk_expm1_builtin: 0x2586880,
   wk_JSFunction_m_function: 0x28,
@@ -535,7 +491,7 @@ PS4["13.50"] = {
   k_prison0: 0x1a5c0c0,
   k_rootvnode: 0x2136e90,
   kpatch: "1350.bin", // BUILT (anchored in kernel_1350.elf); kpatch.js 10/10, both neg controls refuse; UNTESTED on hw
-  payload: "goldhen.bin", // PS4-HEN, works through 13.52
+  payload: "payload2.bin", // PS4-HEN, works through 13.52
 };
 
 PS4["13.52"] = Object.assign({}, PS4["13.50"], {
@@ -567,7 +523,7 @@ PS4["13.52"] = Object.assign({}, PS4["13.50"], {
     "state=663-LIVE-on-hardware shares=13.50 (webkit+libkernel) " +
     "kernel_rvas=MEASURED-from-kernel_1352.elf (kdump5 tier1 36MB pass=39/0, " +
     "kderive 16/16 recipes) kpatch=1352.bin-24-sites-verified-OFFLINE-ONLY " +
-    "payload=goldhen.bin-PS4HEN-native-1352 (patched-GoldHEN KP'd 2/2) " +
+    "payload=payload2.bin-PS4HEN-native-1352 (patched-GoldHEN KP'd 2/2) " +
     "bug=663",
 });
 
@@ -591,11 +547,11 @@ PS4["13.02"] = Object.assign({}, PS4["13.00"], {
   k_prison0: 0x1a5c0c0,
   k_rootvnode: 0x2136e90,
   kpatch: "1302.bin", // ported from 1300.c, 18 sites +0x10; HW-PROVEN on 13.02 (KEXEC rc=0, pass=51)
-  payload: "goldhen.bin", // PS4-HEN, works through 13.52; replaces the non-shipped 13.00 placeholder
+  payload: "payload2.bin", // PS4-HEN, works through 13.52; replaces the non-shipped 13.00 placeholder
   fw_status:
     "state=663-JB+KPATCH-PROVEN-on-hw-pass=51 shares=13.00 (webkit+libkernel, PRIMITIVE-OK) " +
     "kernel_rvas=MEASURED-from-kernel_1302.elf (16/16 GO) same-kernel-as=13.04 " +
-    "kpatch=1302.bin-HW-PROVEN-KEXEC-rc0 payload=goldhen.bin-PS4HEN(works<=13.52) bug=663",
+    "kpatch=1302.bin-HW-PROVEN-KEXEC-rc0 payload=payload2.bin-PS4HEN(works<=13.52) bug=663",
 });
 
 PS4["13.04"] = Object.assign({}, PS4["13.00"], {
@@ -618,11 +574,11 @@ PS4["13.04"] = Object.assign({}, PS4["13.00"], {
   k_prison0: 0x1a5c0c0,
   k_rootvnode: 0x2136e90,
   kpatch: "1302.bin", // SAME kernel as 13.02 -> reuses the one blob (HW-PROVEN on 13.02)
-  payload: "goldhen.bin", // PS4-HEN, works through 13.52
+  payload: "payload2.bin", // PS4-HEN, works through 13.52
   fw_status:
     "state=663-JB+KPATCH-via-13.02(pass=51) shares=13.00 (webkit+libkernel, PRIMITIVE-OK) " +
     "kernel_rvas=SAME-KERNEL-AS-13.02 (measured from kernel_1302.elf, 16/16 GO) " +
-    "kpatch=1302.bin-shared-HW-PROVEN payload=goldhen.bin-PS4HEN(works<=13.52) bug=663",
+    "kpatch=1302.bin-shared-HW-PROVEN payload=payload2.bin-PS4HEN(works<=13.52) bug=663",
 });
 
 PS4["12.02"] = Object.assign({}, PS4["12.00"], {
@@ -642,6 +598,43 @@ PS4["12.52"] = Object.assign({}, PS4["12.50"], {
     "kernel_rvas=STILL-UNVERIFIED but corroborated via 12.02+13.00 dumps " +
     "kpatch=1250.bin bug=poops",
   kpatch: "1250.bin",
+});
+
+
+PS4["14.00"] = Object.assign({}, PS4["13.52"], {
+  alias_of: "13.52-webkit",
+
+  // Reported on screen on every run, so it names what actually runs: the
+  // kernel stage comes from afterglow, and the payload is picked by ?mode.
+  fw_status:
+    "state=14.00 " +
+    "webkit=13.52-identical " +
+    "kernel=afterglow (apm-UAF, own kernel stage) " +
+    "payload=hen.bin|goldhen.bin",
+
+  k_stubs: undefined,
+  wk___imp_pthread_create: undefined,
+  k_pthread_create: undefined,
+
+  k_idt_rsvd: undefined,
+  k_sysctl_handle_int: undefined,
+  k_jmp_rsi: undefined,
+  k_kl_lock: undefined,
+  k_evf_cv: undefined,
+  k_sysent: undefined,
+  k_sysent_661: undefined,
+
+  k_oid_kern_file: undefined,
+  k_oid_maxfilesperproc: undefined,
+  k_oid_maxprocperuid: undefined,
+  k_oid_maxfiles: undefined,
+
+  k_arg1_maxfilesperproc: undefined,
+  k_arg1_maxprocperuid: undefined,
+  k_arg1_maxfiles: undefined,
+
+  k_prison0: undefined,
+  k_rootvnode: undefined,
 });
 
 export function offsetsFor(uaString) {

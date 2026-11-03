@@ -1,25 +1,20 @@
 CACHE MANIFEST
-# version-volkan-v5-step-timing
-# offline-manifests-v1-20261021
-# v4 - startup, AppCache and telemetry reliability 20261003
+# version-volkan-v6-1400-goldhen
+# PS4 13.02 - 14.00 Afterglow + GoldHEN v2.4b18.13
 
-CACHE:
 index.html
 jb.html
-cache.html
-../pspulse.png
-jb.js
 core.js
 mem.js
 int64.js
-rpc_worker.js
 ps4_offsets.js
+afterglow.js
+jb.js
+patchset-1400.bin
+patchset-1352.bin
 goldhen.bin
-patches/1302.bin
-patches/1350.bin
-patches/1352.bin
-
-jb.html?log=1
+hen.bin
+../pspulse.png
 
 NETWORK:
 *
