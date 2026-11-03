@@ -17,7 +17,7 @@ function awaitpl(){
 function load_exploit(){
     document.getElementById('notify').style.display = ''
     document.getElementById('notify').className = 'notification'
-    setTimeout(function(){document.getElementById('log').innerHTML ='<h1 style=color:#c5c7ff>Kırma İşlemi Başlatılıyor... Lütfen Bekleyin!</h1>'; }, 50); 
+    setTimeout(function(){document.getElementById('log').innerHTML ='<h1 style=color:#c5c7ff>Adım 1/3: WebKit Hazırlanıyor... Lütfen Bekleyin!</h1>'; }, 50); 
 }
 
 function load_exploit_already(){
@@ -37,8 +37,9 @@ function goldhen_already(){
 function load_exploit_done(){
     document.getElementById('notify').style.display = ''
     document.getElementById('notify').className = 'notification'
-    setTimeout(function(){document.getElementById('log').innerHTML ='<h1 style=color:#c5c7ff>Kırma Başarılı! GoldHEN v2.4b18.12 Yüklendi ✔</h1>'; }, 50); 
-    setTimeout(ani2, 4000);
+    setTimeout(function(){document.getElementById('log').innerHTML ='<h1 style=color:#fbbf24>Adım 3/3: GoldHEN Başlatıldı — Sol Üstte SARI Bildirim Bekleniyor...</h1>'; }, 50);
+    setTimeout(function(){document.getElementById('log').innerHTML ='<h1 style=color:#34d399>✔ İŞLEM BAŞARIYLA TAMAMLANDI! (Ortadaki [PS] Tuşuna Basınız)</h1>'; }, 4000);
+    setTimeout(ani2, 9000);
 }
 
 function LoadFromGHBLS(PLfile){

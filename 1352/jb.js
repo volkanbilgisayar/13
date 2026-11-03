@@ -53,21 +53,68 @@ function terse(s) {
 
 const SHOW_LOG = params.get("log") === "1";
 if (SHOW_LOG && document.body) document.body.className = "log";
-function finishUI(ok) {
-  if (SHOW_LOG || !document.body) return;
-  const m = document.getElementById("msg");
-  if (m)
-    m.textContent = ok
-      ? "DONE"
-      : armedEver
-        ? "Restart your console"
-        : "Refresh the page and run again";
-  document.body.className = ok ? "done" : "fail";
+function mapStateTurkish1352(t) {
+  if (!t) return t;
+  var s = String(t).toLowerCase();
+  if (s.indexOf("primitive") !== -1 || s.indexOf("scanning") !== -1 || s.indexOf("wiring") !== -1 || s.indexOf("setting up") !== -1) {
+    return "Adım 1/3: WebKit Hazırlanıyor...";
+  }
+  if (s.indexOf("racing") !== -1 || s.indexOf("leak") !== -1 || s.indexOf("read") !== -1 || s.indexOf("write") !== -1 || s.indexOf("root") !== -1 || s.indexOf("caps") !== -1 || s.indexOf("kpatch") !== -1 || s.indexOf("kernel") !== -1) {
+    return "Adım 2/3: Çekirdek Açığı İşleniyor...";
+  }
+  if (s.indexOf("payload") !== -1) {
+    return "Adım 3/3: GoldHEN Belleğe Yükleniyor...";
+  }
+  if (s.indexOf("already jailbroken") !== -1) {
+    return "✔ Cihaz Zaten Kırılmış — Ortadaki [PS] Tuşuna Basınız";
+  }
+  if (s.indexOf("reboot") !== -1) {
+    return "⛔ Lütfen Konsolu Kapatıp Yeniden Açınız";
+  }
+  if (s.indexOf("failed") !== -1 || s.indexOf("see log") !== -1 || s.indexOf("threw") !== -1) {
+    return "İşlem Başarısız Oldu — Sayfayı Yenileyip Tekrar Deneyin";
+  }
+  return t;
 }
+
+function finishUI(ok) {
+  const m = document.getElementById("state") || document.getElementById("msg");
+  if (m) {
+    if (ok) {
+      m.textContent = "Adım 3/3: GoldHEN Başlatıldı — Sol Üstte SARI Bildirim Bekleniyor...";
+      m.className = "warn";
+      setTimeout(function () {
+        m.textContent = "✔ İŞLEM BAŞARIYLA TAMAMLANDI! (Ortadaki [PS] Tuşuna Basınız)";
+        m.className = "ok";
+      }, 4000);
+    } else {
+      m.textContent = armedEver
+        ? "⛔ Lütfen Konsolu Kapatıp Yeniden Açınız"
+        : "İşlem Başarısız Oldu — Sayfayı Yenileyip Tekrar Deneyin";
+      m.className = "bad";
+    }
+  }
+  if (document.body) document.body.className = ok ? "done" : "fail";
+}
+
 function mark(tag, detail) {
   const raw = detail;
   detail = terse(detail);
   lines.push(tag + (detail == null || detail === "" ? "" : "  " + detail));
+
+  if (stateEl) {
+    if (tag.indexOf("PR-") === 0) {
+      stateEl.textContent = "Adım 1/3: WebKit Hazırlanıyor...";
+      stateEl.className = "warn";
+    } else if (tag.indexOf("ROOT") === 0 || tag.indexOf("CAPS") === 0 || tag.indexOf("KPATCH") === 0) {
+      stateEl.textContent = "Adım 2/3: Çekirdek Açığı İşleniyor...";
+      stateEl.className = "warn";
+    } else if (tag.indexOf("PAYLOAD-RUN") === 0 || tag.indexOf("PAYLOAD-FETCH") === 0) {
+      stateEl.textContent = "Adım 3/3: GoldHEN Belleğe Yükleniyor...";
+      stateEl.className = "warn";
+    }
+  }
+
   if (SHOW_LOG && outEl) {
     const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
     outEl.innerHTML = lines
@@ -95,10 +142,12 @@ function trace(tag, detail) {
   if (VERBOSE) mark(tag, detail);
   else post(tag, detail);
 }
+
 function state(t, c) {
-  if (!SHOW_LOG || !stateEl) return;
-  stateEl.textContent = t;
-  stateEl.className = c || "";
+  if (stateEl) {
+    stateEl.textContent = mapStateTurkish1352(t);
+    stateEl.className = c || "";
+  }
 }
 function check(name, ok, detail) {
   if (ok) {

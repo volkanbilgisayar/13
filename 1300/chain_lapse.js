@@ -58,7 +58,60 @@ function mark(tag, detail) {
     outEl.scrollTop = outEl.scrollHeight;
     post(tag, detail);
 }
-function state(t, c) { stateEl.textContent = t; stateEl.className = c || ""; }
+function mapStateTurkish(t) {
+    if (!t) return t;
+    var s = String(t).toLowerCase();
+    if (s.indexOf("running the primitive") !== -1 ||
+        s.indexOf("scanning libkernel") !== -1 ||
+        s.indexOf("wiring the worker") !== -1 ||
+        s.indexOf("setting up the aio") !== -1 ||
+        s.indexOf("dry run") !== -1) {
+        return "Adım 1/3: WebKit Hazırlanıyor...";
+    }
+    if (s.indexOf("racing") !== -1 ||
+        s.indexOf("leaking kernel") !== -1 ||
+        s.indexOf("aio queue") !== -1 ||
+        s.indexOf("kernel read") !== -1 ||
+        s.indexOf("kernel write") !== -1 ||
+        s.indexOf("locating the kernel") !== -1 ||
+        s.indexOf("building kernelview") !== -1 ||
+        s.indexOf("repairing the aliases") !== -1 ||
+        s.indexOf("jailbreak") !== -1 ||
+        s.indexOf("kernel patches") !== -1 ||
+        s.indexOf("stage 3") !== -1 ||
+        s.indexOf("stage 4") !== -1 ||
+        s.indexOf("stage 5") !== -1 ||
+        s.indexOf("stage 6") !== -1 ||
+        s.indexOf("stage 7") !== -1 ||
+        s.indexOf("stage 8") !== -1 ||
+        s.indexOf("stage 9") !== -1) {
+        return "Adım 2/3: Çekirdek Açığı İşleniyor...";
+    }
+    if (s.indexOf("stage 10") !== -1 ||
+        s.indexOf("loading the payload") !== -1 ||
+        s.indexOf("payload...") !== -1) {
+        return "Adım 3/3: GoldHEN Belleğe Yükleniyor...";
+    }
+    if (s.indexOf("already jailbroken") !== -1) {
+        return "✔ Cihaz Zaten Kırılmış — Ortadaki [PS] Tuşuna Basınız";
+    }
+    if (s.indexOf("reboot") !== -1) {
+        return "⛔ Lütfen Konsolu Kapatıp Yeniden Açınız";
+    }
+    if (s.indexOf("failed") !== -1 || s.indexOf("see log") !== -1) {
+        return "İşlem Başarısız Oldu — Sayfayı Yenileyip Tekrar Deneyin";
+    }
+    if (s.indexOf("no offsets") !== -1) {
+        return "Bu Sistem Sürümü Desteklenmiyor";
+    }
+    return t;
+}
+
+function state(t, c) {
+    if (!stateEl) return;
+    stateEl.textContent = mapStateTurkish(t);
+    stateEl.className = c || "";
+}
 
 let passCount = 0, failCount = 0;
 function check(name, ok, detail) {
@@ -3806,7 +3859,7 @@ function makeRpc(worker) {
             mark("REBOOT-REQUIRED", (committed2 ? "TWO aliased pairs are live (0x80 rthdr " + "and 0x100 pktopts). " : "") + "do not keep browsing and do not close the "
                 + "browser normally. power the console off and back on.");
             try {
-                stateEl.textContent = "REBOOT THE CONSOLE";
+                stateEl.textContent = "⛔ Lütfen Konsolu Kapatıp Yeniden Açınız";
                 stateEl.className = "bad";
             } catch (e) { }
         } else if (repaired && cleanupDone) {
@@ -3823,12 +3876,20 @@ function makeRpc(worker) {
                   + "torn down" + (jailbroken ? ", and the process is root"
                     : "") + ". See the stage 8/9/10 marks for what is left.");
             try {
-                stateEl.textContent = payloadRunning
-                    ? "ALL DONE"
-                    : kpatched ? "ROOT + KERNEL PATCHED -- NO REBOOT"
-                    : jailbroken ? "ROOT -- NO REBOOT NEEDED"
-                    : "REPAIRED -- NO REBOOT NEEDED";
-                stateEl.className = "ok";
+                if (payloadRunning) {
+                    stateEl.textContent = "Adım 3/3: GoldHEN Başlatıldı — Sol Üstte SARI Bildirim Bekleniyor...";
+                    stateEl.className = "warn";
+                    setTimeout(function () {
+                        stateEl.textContent = "✔ İŞLEM BAŞARIYLA TAMAMLANDI! (Ortadaki [PS] Tuşuna Basınız)";
+                        stateEl.className = "ok";
+                    }, 4000);
+                } else {
+                    stateEl.textContent = kpatched
+                        ? "ROOT + KERNEL PATCHED -- NO REBOOT"
+                        : jailbroken ? "✔ Kırma Başarılı — Ortadaki [PS] Tuşuna Basınız"
+                        : "REPAIRED -- NO REBOOT NEEDED";
+                    stateEl.className = "ok";
+                }
             } catch (e) { }
         }
     }

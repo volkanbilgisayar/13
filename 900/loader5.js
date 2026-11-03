@@ -22,7 +22,7 @@ function awaitpl() {
     setTimeout(function () { showNotice(typeof LoadedMSG === 'string' ? LoadedMSG : 'Araç Yüklendi!'); }, 800);
     setTimeout(ani2, 4000);
 }
-function load_exploit() { setTimeout(function () { showNotice('Kırma İşlemi Başlatılıyor... Lütfen Bekleyin!'); }, 50); }
+function load_exploit() { setTimeout(function () { showNotice('Adım 1/3: WebKit Hazırlanıyor... Lütfen Bekleyin!'); }, 50); }
 function load_exploit_already() {
     setTimeout(function () { showNotice('Kırma Zaten Yüklü!'); }, 50);
     setTimeout(ani2, 4000);
@@ -32,8 +32,9 @@ function goldhen_already() {
     setTimeout(ani2, 4000);
 }
 function load_exploit_done() {
-    setTimeout(function () { showNotice('Kırma Başarılı! GoldHEN v2.4b18.10 Yüklendi ✔'); }, 50);
-    setTimeout(ani2, 4000);
+    setTimeout(function () { showNotice('Adım 3/3: GoldHEN Başlatıldı — Sol Üstte SARI Bildirim Bekleniyor...'); }, 50);
+    setTimeout(function () { showNotice('✔ İŞLEM BAŞARIYLA TAMAMLANDI! (Ortadaki [PS] Tuşuna Basınız)'); }, 4000);
+    setTimeout(ani2, 9000);
 }
 function LoadFromGHBLS(PLfile) {
     var statusReq = new XMLHttpRequest();

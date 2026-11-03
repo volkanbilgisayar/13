@@ -1663,6 +1663,7 @@ async function patch_kernel(kbase, kmem, p_ucred, restore_info) {
   log('setuid(0)');
   sysi('setuid', 0);
   log('kernel exploit succeeded!');
+    if (typeof showNotice === 'function') showNotice('Adım 2/3: Çekirdek Açığı İşlendi — GoldHEN Hazırlanıyor...');
   localStorage.ExploitLoaded="yes";
   sessionStorage.ExploitLoaded="yes";
 }
@@ -1886,6 +1887,7 @@ function array_from_address(addr, size) {
 
 function toogle_payload(PLfile) {
   log(`loading payload: ${PLfile}`);
+  if (typeof showNotice === 'function') showNotice('Adım 3/3: GoldHEN Belleğe Yükleniyor...');
   const xhr = new XMLHttpRequest();
   xhr.open('GET', PLfile);
   xhr.responseType = "arraybuffer";

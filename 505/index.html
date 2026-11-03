@@ -651,7 +651,10 @@
         }
 
         function allset() {
-            msgs.innerHTML = LoadedMSG;
+            msgs.innerHTML = "<h1>Adım 3/3: GoldHEN Başlatıldı — Sol Üstte SARI Bildirim Bekleniyor...</h1>";
+            setTimeout(function () {
+                msgs.innerHTML = "<h1>✔ İŞLEM BAŞARIYLA TAMAMLANDI! (Ortadaki [PS] Tuşuna Basınız)</h1>";
+            }, 4000);
         }
 
         var payloadBusy = false;
@@ -746,14 +749,14 @@
         }
 
         function load_goldhen18() {
-            msgs.innerHTML = "GoldHEN v2.4b18.12 Yükleniyor... Lütfen Bekleyin";
+            msgs.innerHTML = "Adım 3/3: GoldHEN Belleğe Yükleniyor... Lütfen Bekleyin";
             LoadedMSG = "GoldHEN v2.4b18.12 Başarıyla Yüklendi ✔";
             PLfile = "goldhen.bin";
             load_payload();
         }
 
         function load_goldhen5() {
-            msgs.innerHTML = "GoldHEN v2.4b18.10 Yükleniyor... Lütfen Bekleyin";
+            msgs.innerHTML = "Adım 3/3: GoldHEN Belleğe Yükleniyor... Lütfen Bekleyin";
             LoadedMSG = "GoldHEN v2.4b18.10 Başarıyla Yüklendi ✔";
             PLfile = "goldhen10.bin";
             load_payload();

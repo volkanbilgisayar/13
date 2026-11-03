@@ -63,7 +63,47 @@ function mark(tag, detail) {
 }
 
 function trace(tag, detail) { if (VERBOSE) mark(tag, detail); else post(tag, detail); }
-function state(t, c) { stateEl.textContent = t; stateEl.className = c || ""; }
+function mapStateTurkishPoops(t) {
+    if (!t) return t;
+    var s = String(t).toLowerCase();
+    if (s.indexOf("running the primitive") !== -1 ||
+        s.indexOf("sweeping") !== -1 ||
+        s.indexOf("setting up") !== -1 ||
+        s.indexOf("bringing up") !== -1) {
+        return "Adım 1/3: WebKit Hazırlanıyor...";
+    }
+    if (s.indexOf("attempt") !== -1 ||
+        s.indexOf("leaking a kqueue") !== -1 ||
+        s.indexOf("kread") !== -1 ||
+        s.indexOf("make_karw") !== -1 ||
+        s.indexOf("sandbox escape") !== -1 ||
+        s.indexOf("remove_uaf") !== -1 ||
+        s.indexOf("kernel patches") !== -1) {
+        return "Adım 2/3: Çekirdek Açığı İşleniyor...";
+    }
+    if (s.indexOf("payload") !== -1) {
+        return "Adım 3/3: GoldHEN Belleğe Yükleniyor...";
+    }
+    if (s.indexOf("already jailbroken") !== -1) {
+        return "✔ Cihaz Zaten Kırılmış — Ortadaki [PS] Tuşuna Basınız";
+    }
+    if (s.indexOf("reboot") !== -1) {
+        return "⛔ Lütfen Konsolu Kapatıp Yeniden Açınız";
+    }
+    if (s.indexOf("failed") !== -1 || s.indexOf("see log") !== -1) {
+        return "İşlem Başarısız Oldu — Sayfayı Yenileyip Tekrar Deneyin";
+    }
+    if (s.indexOf("no offsets") !== -1) {
+        return "Bu Sistem Sürümü Desteklenmiyor";
+    }
+    return t;
+}
+
+function state(t, c) {
+    if (!stateEl) return;
+    stateEl.textContent = mapStateTurkishPoops(t);
+    stateEl.className = c || "";
+}
 function check(name, ok, detail) {
     if (ok) { passCount++; mark("PROOF-OK", name + (detail ? "  " + detail : "")); }
     else { failCount++; mark("PROOF-FAIL", name + (detail ? "  " + detail : "")); }
@@ -2460,12 +2500,20 @@ let allDone = false;
                 + " reached=" + (triplets ? "triplets" : committed ? "commit" : "none"));
         }
 
-        state(allDone ? "ALL DONE"
-              : kv ? "KERNEL R/W -- REBOOT NEEDED"
-              : kernelBase ? "FAILED IN make_karw -- REBOOT"
-              : triplets ? "FAILED IN leak_kqueue (triple free was OK) -- REBOOT"
-              : committed ? "FAILED IN triple free -- REBOOT"
-              : "no commit", allDone ? "ok" : kv ? "warn" : "bad");
+        if (allDone) {
+            stateEl.textContent = "Adım 3/3: GoldHEN Başlatıldı — Sol Üstte SARI Bildirim Bekleniyor...";
+            stateEl.className = "warn";
+            setTimeout(function () {
+                stateEl.textContent = "✔ İŞLEM BAŞARIYLA TAMAMLANDI! (Ortadaki [PS] Tuşuna Basınız)";
+                stateEl.className = "ok";
+            }, 4000);
+        } else {
+            state(kv ? "KERNEL R/W -- REBOOT NEEDED"
+                  : kernelBase ? "FAILED IN make_karw -- REBOOT"
+                  : triplets ? "FAILED IN leak_kqueue (triple free was OK) -- REBOOT"
+                  : committed ? "FAILED IN triple free -- REBOOT"
+                  : "no commit", kv ? "warn" : "bad");
+        }
     } catch (e) {
         mark("STEP10-FAILED", (e && e.message) ? e.message : String(e));
         state("FAILED -- see log", "bad");
