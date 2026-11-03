@@ -349,7 +349,32 @@
             font-size: 12px;
             color: #64748b;
         }
-    </style>
+    
+        .step-danger {
+            background: rgba(220, 38, 38, 0.22) !important;
+            border-left: 4px solid #ef4444 !important;
+            color: #fecaca !important;
+            padding: 10px 14px !important;
+            border-radius: 0 8px 8px 0 !important;
+            margin-top: 10px !important;
+            font-size: 13.5px !important;
+            line-height: 1.55 !important;
+        }
+        .step-danger b {
+            color: #ffffff !important;
+            background: #dc2626 !important;
+            padding: 2px 7px !important;
+            border-radius: 4px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.02em !important;
+        }
+        .step-danger u {
+            color: #fef08a !important;
+            font-weight: 700 !important;
+            text-decoration: underline !important;
+        }
+
+</style>
     <script>
         if (window.applicationCache && window.applicationCache.status == 0) {
             window.location.replace("cache.html");
@@ -386,27 +411,27 @@
       <div class="jailbreak-status" id="msgs2">PSFree Kırma Motoru Başlatılıyor...</div>
     </div>
 
-    <!-- SARI LOGO UYARISI -->
-    <div class="yellow-alert-box">
-      <div class="alert-header">
-        <span class="alert-badge">Önemli Kural</span>
-        <span class="alert-title">SARI "GoldHEN" BİLDİRİMİ GELENE KADAR BEKLEYİN!</span>
-      </div>
-      <ul class="alert-steps">
-        <li>
-          <b>1. HİÇBİR TUŞA BASMAYIN:</b> Kırma işlemi arka planda otomatik olarak yürütülüyor. Lütfen kumandaya dokunmayın ve sayfayı kapatmayın!
-        </li>
-        <li class="step-highlight">
-          <b>2. SARI BİLDİRİMİ BEKLEYİN:</b> Ekranın sol üst köşesinde <b>SARI RENKLİ "GoldHEN" (Coded by SiSTR0)</b> logosu ve bildirimi çıkana kadar bekleyiniz.
-        </li>
-        <li>
-          <b>3. İŞLEM TAMAMLANDI:</b> Sarı logo geldikten sonra kırma bitmiştir! Kumandanızın <b>PS Tuşuna</b> basarak ana menüye dönebilir ve tüm oyunlarınıza girebilirsiniz.
-        </li>
-      </ul>
-      <div class="alert-subtext">
-        <span>⚠️ <b>Hatırlatma:</b> Ekranda <i>"Yetersiz Sistem Belleği"</i> uyarısı çıkarsa korkmayın, kumandadan <b>TAMAM</b> tuşuna basıp bekleyin.</span>
-      </div>
-    </div>
+    <!-- SARI LOGO VE PS TUSU CIKIS UYARISI -->
+            <div class="yellow-alert-box">
+                <div class="alert-header">
+                    <span class="alert-badge">HAYATİ ÖNEMLİ KURAL</span>
+                    <span class="alert-title">SARI LOGO BİLDİRİMİ VE ÇIKIŞ TALİMATI</span>
+                </div>
+                <ul class="alert-steps">
+                    <li>1. Kırma işlemi arka planda otomatik yapılmaktadır. Sol üst köşede <b>SARI RENKLİ "GoldHEN" (Coded by SiSTR0)</b> bildirimi gelene kadar bekleyin.</li>
+                    <li class="step-highlight" style="background: rgba(34, 197, 94, 0.22); border-left-color: #22c55e; color: #f0fdf4;">
+                        2. Sarı bildirim geldikten sonra işlem tamamdır! <b>YALNIZCA KUMANDANIZIN TAM ORTASINDAKİ [ PS ] TUŞUNA</b> basarak doğrudan ana menüye dönün ve oyunlarınıza girin.
+                    </li>
+                    <li class="step-danger">
+                        <b>⛔ DİKKAT: ASLA GERİ (O / YUVARLAK) TUŞUNA BASMAYIN!</b><br>
+                        Geri tuşuna basarsanız sayfa kırmayı baştan başlatır. Cihaz 2. kez kırılmaya çalışırsa döngüye girer ve konsol kilitlenip kapanır. <u>Çıkış için HER ZAMAN kumandanın ortasındaki PS tuşuna basınız!</u>
+                    </li>
+                </ul>
+                <div class="alert-subtext">
+                    <span>⚠️</span>
+                    <span><i>"Yetersiz Bellek" uyarısı gelirse korkmayın, TAMAM (X) tuşuna basıp bekleyin. Konsol kendisi halleder.</i></span>
+                </div>
+            </div>
 
     <!-- INSTAGRAM TAKİP KARTI -->
     <section class="instagram-card">
@@ -497,5 +522,19 @@
     if (document.getElementById("passCounter")) document.getElementById("passCounter").innerHTML = localStorage.passcount;
     if (document.getElementById("failCounter")) document.getElementById("failCounter").innerHTML = localStorage.failcount;
 </script>
+
+<script>
+// Geri (O) tusuna basip kirmanin donguye girmesini ve konsolun cokmesini onleme korumasi:
+(function() {
+    try {
+        history.pushState(null, null, location.href);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, location.href);
+            alert("DİKKAT: Lütfen GERİ tuşuna basmayınız!\n\nKırma işlemi tamamlandıysa, kumandanızın TAM ORTASINDAKİ [PS] TUŞUNA basarak doğrudan ana menüye dönünüz.");
+        });
+    } catch(e) {}
+})();
+</script>
+
 </body>
 </html>
