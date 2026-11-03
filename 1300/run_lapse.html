@@ -1,93 +1,426 @@
 <!DOCTYPE html>
 <html lang="tr" manifest="cache.manifest">
 <head>
-    <link rel="icon" type="image/png" href="../pspulse.png">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PS4 11.00-13.00 LAPSE KIRMA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOLKAN BİLGİSAYAR - PS4 11.00-13.00 Kırma</title>
+<link rel="icon" type="image/png" href="../pspulse.png">
 <style>
-    :root {
-        --bg: #151515;
-        --panel: #1c1c1c;
-        --panel-2: #242424;
-        --line: #2e2e2e;
-        --line-bright: #454545;
-        --text: #f5f5f5;
-        --muted: #b5b5b5;
-        --dim: #828282;
-        --accent: #a294ff;
-        --red: #ff9b9b;
-        --amber: #e1bd72;
-    }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: #080a0f;
+    background: radial-gradient(circle at 50% 20%, #111827 0%, #080a0f 80%);
+    color: #e2e8f0;
+    font: 15px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { background: var(--bg); }
-    html, body { min-height: 100%; }
-    body {
-        background-color: var(--bg);
-        background-image: linear-gradient(rgba(162, 148, 255, .05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(162, 148, 255, .05) 1px, transparent 1px);
-        background-size: 36px 36px;
-        color: var(--text);
-        font: 16px/1.45 Consolas, "Liberation Mono", monospace;
-        min-height: 100vh;
-        overflow: hidden;
-    }
+  /* Üst Başlık (Brand Navbar) */
+  #brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    background: rgba(14, 20, 30, 0.95);
+    border-bottom: 1px solid #1e293b;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  .brand-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0284c7, #2563eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+  }
+  .brand-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: #ffffff;
+  }
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .brand-title {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #f8fafc;
+    text-transform: uppercase;
+  }
+  .brand-sub {
+    font-size: 11px;
+    font-weight: 600;
+    color: #38bdf8;
+    letter-spacing: 0.05em;
+  }
 
-    .app { margin: 0 auto; padding: 14px 26px 12px; width: min(100% - 52px, 1220px); }
+  /* Ana Kapsayıcı */
+  .page-container {
+    max-width: 680px;
+    margin: 24px auto;
+    padding: 0 16px 32px;
+  }
 
-    /* Top status bar */
-    .bar {
-        align-items: center;
-        border: 1px solid var(--line-bright);
-        display: flex;
-        font-size: 14px;
-        justify-content: space-between;
-        letter-spacing: .1em;
-        padding: 10px 16px;
-        text-transform: uppercase;
-    }
-    .bar b { color: var(--accent); font-weight: 400; }
-    .bar-chain { color: var(--dim); }
-    .bar-chain::before { color: var(--accent); content: "\25CF "; }
+  .main-card {
+    background: rgba(15, 23, 42, 0.88);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.1);
+  }
 
-    #state { color: var(--accent); font-size: 22px; font-weight: 400; line-height: 1.25; margin: 18px 0 10px; }
-    .ok { color: var(--accent); }
-    .bad { color: var(--red); }
-    .warn { color: var(--amber); }
+  .status-spinner {
+    width: 52px;
+    height: 52px;
+    margin: 4px auto 16px;
+    border: 4px solid #1e293b;
+    border-top-color: #38bdf8;
+    border-right-color: #f59e0b;
+    border-radius: 50%;
+    animation: spin 0.85s linear infinite;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
 
-    /* chain JS scrolls this element - keep overflow and a fixed height */
-    #out {
-        background: var(--panel);
-        border: 1px solid var(--line-bright);
-        color: var(--text);
-        font: inherit;
-        font-size: 13px;
-        line-height: 1.45;
-        height: calc(100vh - 150px);
-        overflow-y: auto;
-        padding: 12px 14px;
-        white-space: pre-wrap;
-    }
+  #wrap {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  #state {
+    font-size: 21px;
+    font-weight: 800;
+    margin: 0 0 8px;
+    color: #f8fafc;
+    letter-spacing: 0.02em;
+  }
+  .ok { color: #34d399; }
+  .bad { color: #f87171; }
+  .warn { color: #fbbf24; }
 
-    @media (max-width: 760px) {
-        .app { padding: 8px 10px; width: min(100% - 20px, 560px); }
-        .bar { font-size: 12px; padding: 8px 12px; }
-        #state { font-size: 19px; margin: 14px 0 8px; }
-        #out { height: calc(100vh - 120px); font-size: 12px; }
-    }
+  /* SARI LOGO UYARI KUTUSU */
+  .yellow-alert-box {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(180, 83, 9, 0.12) 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+    animation: pulseBorder 2.5s infinite alternate;
+    text-align: left;
+  }
+  @keyframes pulseBorder {
+    0% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+    100% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.45); border-color: #fbbf24; }
+  }
+  .alert-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .alert-badge {
+    background: #f59e0b;
+    color: #000;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alert-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fbbf24;
+    letter-spacing: 0.02em;
+  }
+  .alert-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .alert-steps li {
+    border-left: 3px solid #f59e0b;
+    color: #fef3c7;
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 8px 0;
+    padding-left: 12px;
+  }
+  .alert-steps li b {
+    color: #ffffff;
+    background: rgba(245, 158, 11, 0.35);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  .alert-steps .step-highlight {
+    background: rgba(245, 158, 11, 0.22);
+    border-left: 3px solid #ffffff;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+  }
+  .alert-subtext {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(245, 158, 11, 0.4);
+    font-size: 13px;
+    color: #fde68a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* INSTAGRAM TANITIM KARTI */
+  .instagram-card {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+    border: 1px solid rgba(225, 48, 108, 0.4);
+    border-radius: 14px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    text-align: left;
+  }
+  .instagram-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  }
+  .ig-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .ig-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ig-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(220, 39, 67, 0.4);
+  }
+  .ig-icon-box svg {
+    width: 22px;
+    height: 22px;
+    fill: #ffffff;
+  }
+  .ig-titles {
+    display: flex;
+    flex-direction: column;
+  }
+  .ig-main-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f8fafc;
+  }
+  .ig-handle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f472b6;
+    letter-spacing: 0.02em;
+  }
+  .ig-badge-pill {
+    background: rgba(236, 72, 153, 0.15);
+    color: #f472b6;
+    border: 1px solid rgba(236, 72, 153, 0.3);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .ig-description {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #cbd5e1;
+    margin: 0 0 12px;
+  }
+  .ig-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .ig-feat {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    color: #94a3b8;
+  }
+  .ig-footer-box {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #e2e8f0;
+  }
+  .ig-footer-box span b {
+    color: #f472b6;
+  }
+
+  /* Gizli / Katlanabilir Geliştirici Günlüğü */
+  .dev-details {
+    margin-top: 16px;
+    font-size: 11px;
+    color: #64748b;
+    border-top: 1px solid #1e293b;
+    padding-top: 8px;
+  }
+  .dev-details summary {
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    color: #475569;
+  }
+  .dev-details summary:hover { color: #94a3b8; }
+  #out {
+    background: #090d16;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    color: #94a3b8;
+    font: 11px/1.4 Consolas, monospace;
+    height: 120px;
+    margin-top: 6px;
+    overflow-y: auto;
+    padding: 8px 10px;
+    white-space: pre-wrap;
+  }
+
+  .footer-sub {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 12px;
+    color: #64748b;
+  }
 </style>
 </head>
 <body>
-    <div class="app">
-        <header class="bar">
-            <span><b>PS4 KIRMA</b> // TÜRKÇE MENÜ</span>
-            <span class="bar-chain">Lapse Kırma Zinciri</span>
-        </header>
 
-        <div id="state">Kırma yükleniyor, lütfen bekleyin...</div>
-        <div id="out"></div>
+<!-- Üst Başlık (Volkan Bilgisayar) -->
+<header id="brand">
+  <div class="brand-content">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 9 18.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+      </svg>
     </div>
+    <div class="brand-text">
+      <span class="brand-title">VOLKAN BİLGİSAYAR</span>
+      <span class="brand-sub">PS4 Kırma &amp; Yazılım Servisi</span>
+    </div>
+  </div>
+</header>
+
+<div class="page-container">
+  <main class="main-card">
+    <div class="status-spinner"></div>
+    <div id="wrap">
+      <div id="state">Kırma işlemi yapılıyor, lütfen bekleyin...</div>
+    </div>
+
+    <!-- SARI LOGO UYARISI -->
+    <div class="yellow-alert-box">
+      <div class="alert-header">
+        <span class="alert-badge">Önemli Kural</span>
+        <span class="alert-title">SARI "GoldHEN" BİLDİRİMİ GELENE KADAR BEKLEYİN!</span>
+      </div>
+      <ul class="alert-steps">
+        <li>
+          <b>1. HİÇBİR TUŞA BASMAYIN:</b> Kırma işlemi arka planda otomatik olarak yürütülüyor. Lütfen kumandaya dokunmayın ve sayfayı kapatmayın!
+        </li>
+        <li class="step-highlight">
+          <b>2. SARI BİLDİRİMİ BEKLEYİN:</b> Ekranın sol üst köşesinde <b>SARI RENKLİ "GoldHEN" (Coded by SiSTR0)</b> logosu ve bildirimi çıkana kadar bekleyiniz.
+        </li>
+        <li>
+          <b>3. İŞLEM TAMAMLANDI:</b> Sarı logo geldikten sonra kırma bitmiştir! Kumandanızın <b>PS Tuşuna</b> basarak ana menüye dönebilir ve tüm oyunlarınıza girebilirsiniz.
+        </li>
+      </ul>
+      <div class="alert-subtext">
+        <span>⚠️ <b>Hatırlatma:</b> Ekranda <i>"Yetersiz Sistem Belleği"</i> uyarısı çıkarsa korkmayın, kumandadan <b>TAMAM</b> tuşuna basıp bekleyin.</span>
+      </div>
+    </div>
+
+    <!-- INSTAGRAM TAKİP KARTI -->
+    <section class="instagram-card">
+      <div class="ig-top">
+        <div class="ig-brand-row">
+          <div class="ig-icon-box">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </div>
+          <div class="ig-titles">
+            <span class="ig-main-title">Volkan Bilgisayar</span>
+            <span class="ig-handle">@volkanbilgisayar</span>
+          </div>
+        </div>
+        <span class="ig-badge-pill">Takip Edin</span>
+      </div>
+
+      <p class="ig-description">
+        En güncel <b>Türkçe Yamalı Oyunlar</b>, PS4 / PS5 kırma güncellemeleri, oyun yükleme ve teknik destek hizmetleri için bizi Instagram'dan takip edin!
+      </p>
+
+      <div class="ig-features">
+        <span class="ig-feat">🎮 Yeni Çıkan Oyunlar</span>
+        <span class="ig-feat">🇹🇷 Türkçe Oyun Yamaları</span>
+        <span class="ig-feat">⚡ Hızlı Teknik Destek</span>
+        <span class="ig-feat">🛠️ Bakım &amp; Onarım</span>
+      </div>
+
+      <div class="ig-footer-box">
+        <span>Instagram Arama: <b>volkanbilgisayar</b></span>
+        <span>Takipte Kalın 🔔</span>
+      </div>
+    </section>
+
+    <!-- Arka Planda Çalışan Geliştirici Günlüğü (İsteğe bağlı tıklandığında açılır) -->
+    <details class="dev-details">
+      <summary>Arka Plan İşlem Günlüğü (Kod Çıktısı)</summary>
+      <div id="out"></div>
+    </details>
+
+    <div class="footer-sub">
+      VOLKAN BİLGİSAYAR // PS4 11.00 - 13.00 GoldHEN Kırma Sistemi
+    </div>
+  </main>
+</div>
+
 <script type="module">import "./chain_lapse.js";</script>
 <script>
 (function () {
@@ -139,5 +472,6 @@
         } catch (e) { /* never break the exploit page */ }
     }, 3000);
 })();
-</script></body>
+</script>
+</body>
 </html>

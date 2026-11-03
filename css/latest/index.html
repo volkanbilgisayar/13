@@ -1,301 +1,486 @@
 <!DOCTYPE html>
 <html lang="tr" manifest="cache.manifest">
-
 <head>
-    <link rel="icon" type="image/png" href="../../pspulse.png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PS4 6.00-11.02 KIRMA MENÜSÜ // GOLDHEN v2.4b18.12</title>
-    <style>
-        :root {
-            --bg: #151515;
-            --panel: #1c1c1c;
-            --panel-2: #242424;
-            --line: #2e2e2e;
-            --line-bright: #454545;
-            --text: #f5f5f5;
-            --muted: #b5b5b5;
-            --dim: #828282;
-            --accent: #a294ff;
-            --red: #ff9b9b;
-            --amber: #e1bd72;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VOLKAN BİLGİSAYAR - PS4 9.65-11.02 Kırma</title>
+<link rel="icon" type="image/png" href="../../pspulse.png">
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: #080a0f;
+    background: radial-gradient(circle at 50% 20%, #111827 0%, #080a0f 80%);
+    color: #e2e8f0;
+    font: 15px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { background: var(--bg); }
-        html, body { min-height: 100%; }
-        body {
-            background-color: var(--bg);
-            background-image: linear-gradient(rgba(162, 148, 255, .05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(162, 148, 255, .05) 1px, transparent 1px);
-            background-size: 36px 36px;
-            color: var(--text);
-            display: flex;
-            flex-direction: column;
-            font: 17px/1.4 Consolas, "Liberation Mono", monospace;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        a { color: inherit; }
+  /* Üst Başlık (Brand Navbar) */
+  #brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    background: rgba(14, 20, 30, 0.95);
+    border-bottom: 1px solid #1e293b;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  .brand-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0284c7, #2563eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+  }
+  .brand-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: #ffffff;
+  }
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .brand-title {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #f8fafc;
+    text-transform: uppercase;
+  }
+  .brand-sub {
+    font-size: 11px;
+    font-weight: 600;
+    color: #38bdf8;
+    letter-spacing: 0.05em;
+  }
 
-        .app { display: flex; flex: 1 0 auto; flex-direction: column; margin: 0 auto; padding: 14px 26px 12px; width: min(100% - 52px, 1220px); }
+  /* Ana Kapsayıcı */
+  .page-container {
+    max-width: 680px;
+    margin: 24px auto;
+    padding: 0 16px 32px;
+  }
 
-        /* Top status bar */
-        .bar {
-            align-items: center;
-            border: 1px solid var(--line-bright);
-            display: flex;
-            font-size: 14px;
-            justify-content: space-between;
-            letter-spacing: .1em;
-            padding: 10px 16px;
-            text-transform: uppercase;
-        }
-        .bar b { color: var(--accent); font-weight: 400; }
-        .bar-fw { color: var(--dim); }
-        .bar-fw::before { color: var(--accent); content: "\25CF "; }
+  .main-card {
+    background: rgba(15, 23, 42, 0.88);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.1);
+  }
 
-        .layout { display: flex; flex: 1 0 auto; flex-direction: column; padding: 20px 0 0; }
+  .status-spinner {
+    width: 52px;
+    height: 52px;
+    margin: 4px auto 16px;
+    border: 4px solid #1e293b;
+    border-top-color: #38bdf8;
+    border-right-color: #f59e0b;
+    border-radius: 50%;
+    animation: spin 0.85s linear infinite;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
 
-        /* Header */
-        .kicker { color: var(--accent); font-size: 14px; letter-spacing: .14em; margin: 0 0 12px; }
-        h1 { font-size: clamp(34px, 5vw, 56px); font-weight: 400; letter-spacing: -.07em; line-height: 1; margin: 0; }
-        h1 em { color: var(--accent); font-style: normal; }
-        .sub { color: var(--muted); font-size: 17px; margin: 13px 0 0; max-width: 720px; }
-        .boot { color: var(--dim); font-size: 14px; list-style: none; margin: 12px 0 0; }
-        .boot li { margin: 3px 0; }
-        .boot b { color: var(--accent); font-weight: 400; }
-        #UA { color: var(--dim); display: block; font-size: 12px; margin-top: 10px; overflow-wrap: anywhere; }
-        /* Offline cache stage (upstream inline script target) */
-        #cache { color: var(--dim); font-size: 13px; margin: 6px 0 0; min-height: 16px; }
-        #cache.cacheok { color: var(--accent); }
+  #wrap {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  #autoJbLabel {
+    font-size: 21px;
+    font-weight: 800;
+    margin: 0 0 8px;
+    color: #f8fafc;
+    letter-spacing: 0.02em;
+    display: block;
+  }
+  #cache {
+    font-size: 13px;
+    color: #64748b;
+    min-height: 18px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  #cache.cacheok {
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
 
-        /* Status / exploit output */
-        .status {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            margin-top: 20px;
-            padding: 14px 16px;
-        }
-        .status-label {
-            border-bottom: 1px solid var(--line);
-            color: var(--muted);
-            font-size: 14px;
-            letter-spacing: .12em;
-            margin-bottom: 11px;
-            padding: 0 4px 10px;
-            text-transform: uppercase;
-        }
-        /* logger target in src/misc.js - keep id, pre-wrap and bounds */
-        #console {
-            background: var(--panel-2);
-            border: 1px solid var(--line-bright);
-            color: var(--text);
-            font: inherit;
-            font-size: 14px;
-            line-height: 1.45;
-            max-height: 132px;
-            min-height: 42px;
-            overflow: auto;
-            padding: 10px 14px;
-            white-space: pre-wrap;
-        }
+  /* SARI LOGO UYARI KUTUSU */
+  .yellow-alert-box {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(180, 83, 9, 0.12) 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+    animation: pulseBorder 2.5s infinite alternate;
+    text-align: left;
+  }
+  @keyframes pulseBorder {
+    0% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+    100% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.45); border-color: #fbbf24; }
+  }
+  .alert-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .alert-badge {
+    background: #f59e0b;
+    color: #000;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alert-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fbbf24;
+    letter-spacing: 0.02em;
+  }
+  .alert-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .alert-steps li {
+    border-left: 3px solid #f59e0b;
+    color: #fef3c7;
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 8px 0;
+    padding-left: 12px;
+  }
+  .alert-steps li b {
+    color: #ffffff;
+    background: rgba(245, 158, 11, 0.35);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  .alert-steps .step-highlight {
+    background: rgba(245, 158, 11, 0.22);
+    border-left: 3px solid #ffffff;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+  }
+  .alert-subtext {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(245, 158, 11, 0.4);
+    font-size: 13px;
+    color: #fde68a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-        /* Controls */
-        .controls { border: 1px solid var(--line); margin-top: 14px; padding: 14px; }
-        .section-title {
-            border-bottom: 1px solid var(--line);
-            color: var(--muted);
-            font-size: 14px;
-            letter-spacing: .12em;
-            margin-bottom: 11px;
-            padding: 0 4px 10px;
-            text-transform: uppercase;
-        }
-        #kernel-options { align-items: center; display: flex; flex-wrap: wrap; gap: 10px 14px; }
-        .chain-label { color: var(--muted); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
-        .chain-options { display: flex; gap: 8px; }
-        #kernel-options input[type="radio"] { height: 1px; opacity: 0; position: absolute; width: 1px; }
-        .chain-option,
-        #jeilbrek,
-        #reloadBtn,
-        .auto-jb-label {
-            background: var(--panel);
-            border: 1px solid var(--line-bright);
-            color: var(--text);
-            cursor: pointer;
-            font: inherit;
-            min-height: 48px;
-            padding: 10px 14px;
-        }
-        #kernel-options input[type="radio"]:focus + .chain-option,
-        #kernel-options input[type="radio"]:checked + .chain-option,
-        .chain-option:hover,
-        #jeilbrek:hover,
-        #jeilbrek:focus,
-        #reloadBtn:hover,
-        #reloadBtn:focus,
-        .auto-jb-label:hover {
-            background: var(--panel-2);
-            border-color: var(--accent);
-            color: var(--accent);
-            outline: 0;
-        }
-        #kernel-options input[type="radio"]:focus + .chain-option,
-        #jeilbrek:focus,
-        #reloadBtn:focus { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
-        #jeilbrek:disabled { cursor: wait; opacity: .55; }
-        .auto-jb { align-items: center; display: flex; gap: 8px; }
-        .auto-jb-label { align-items: center; display: flex; font-size: 14px; text-transform: none; }
-        .auto-jb-label:focus { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); outline: 0; }
-        #autoJbInput { height: 18px; width: 18px; }
+  /* INSTAGRAM TANITIM KARTI */
+  .instagram-card {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+    border: 1px solid rgba(225, 48, 108, 0.4);
+    border-radius: 14px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    text-align: left;
+  }
+  .instagram-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  }
+  .ig-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .ig-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ig-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(220, 39, 67, 0.4);
+  }
+  .ig-icon-box svg {
+    width: 22px;
+    height: 22px;
+    fill: #ffffff;
+  }
+  .ig-titles {
+    display: flex;
+    flex-direction: column;
+  }
+  .ig-main-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f8fafc;
+  }
+  .ig-handle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f472b6;
+    letter-spacing: 0.02em;
+  }
+  .ig-badge-pill {
+    background: rgba(236, 72, 153, 0.15);
+    color: #f472b6;
+    border: 1px solid rgba(236, 72, 153, 0.3);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .ig-description {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #cbd5e1;
+    margin: 0 0 12px;
+  }
+  .ig-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .ig-feat {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    color: #94a3b8;
+  }
+  .ig-footer-box {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #e2e8f0;
+  }
+  .ig-footer-box span b {
+    color: #f472b6;
+  }
 
-        /* Footer */
-        .foot {
-            border-top: 1px solid var(--line);
-            color: var(--dim);
-            font-size: 13px;
-            margin-top: 16px;
-            padding: 12px 4px 2px;
-            text-align: center;
-        }
-        .foot div { margin: 2px 0; }
+  /* Gizli / Katlanabilir Geliştirici Günlüğü */
+  .dev-details {
+    margin-top: 16px;
+    font-size: 11px;
+    color: #64748b;
+    border-top: 1px solid #1e293b;
+    padding-top: 8px;
+  }
+  .dev-details summary {
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    color: #475569;
+  }
+  .dev-details summary:hover { color: #94a3b8; }
+  #console {
+    background: #090d16;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    color: #94a3b8;
+    font: 11px/1.4 Consolas, monospace;
+    height: 110px;
+    margin-top: 6px;
+    overflow-y: auto;
+    padding: 8px 10px;
+    white-space: pre-wrap;
+  }
 
-        @media (max-width: 760px) {
-            body { overflow: auto; }
-            .app { padding: 8px 10px; width: min(100% - 20px, 560px); }
-            .bar { font-size: 12px; padding: 8px 12px; }
-            .layout { padding-top: 14px; }
-            h1 { font-size: 38px; }
-            .sub { font-size: 16px; }
-            #kernel-options { align-items: flex-start; flex-direction: column; }
-            .chain-options { width: 100%; }
-            .chain-option { flex: 1; }
-        }
-    </style>
+  .dev-controls {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .dev-controls button {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #e2e8f0;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .footer-sub {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 12px;
+    color: #64748b;
+  }
+</style>
 </head>
-
 <body>
-    <div class="app">
-        <header class="bar">
-            <span><b>VOLKAN BİLGİSAYAR</b> // PS4 FW 6.00-11.02</span>
-            <span class="bar-fw">KIRMAYA HAZIR</span>
-        </header>
 
-        <main class="layout">
-            <p class="kicker">$ sistem --cssfontface</p>
-            <h1>CSSFontFace <em>6.00-11.02</em> Kırma</h1>
-            <p class="sub">Otomatik ve Çevrimdışı GoldHEN Kırma Sistemi.</p>
-            <ul class="boot">
-                <li>[ <b>HAZIR</b> ] CSSFontFace kırma zinciri devrede</li>
-                <li>[ <b>HAZIR</b> ] GoldHEN v2.4b18.12 yüklendi</li>
-                <li>[ <b>HAZIR</b> ] Çevrimdışı hafıza devrede</li>
-            </ul>
-            <p id="UA">Cihaz / Tarayıcı:</p>
-            <p id="cache">Çevrimdışı hafıza kontrol ediliyor...</p>
+<!-- Üst Başlık (Volkan Bilgisayar) -->
+<header id="brand">
+  <div class="brand-content">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 9 18.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <span class="brand-title">VOLKAN BİLGİSAYAR</span>
+      <span class="brand-sub">PS4 Kırma &amp; Yazılım Servisi</span>
+    </div>
+  </div>
+</header>
 
-            <div class="status">
-                <div class="status-label">İşlem Durumu ve Günlük</div>
-                <pre id="console">Hazır. Kırma işlemi bekleniyor...</pre>
-            </div>
-
-            <section class="controls">
-                <div class="section-title">Kırma Kontrolleri</div>
-                <form id="kernel-options">
-                    <span class="chain-label">Kırma Yöntemi (Kernel)</span>
-                    <div class="chain-options">
-                        <input type="radio" name="kernel" id="netctrl-exploit" value="netctrl">
-                        <label class="chain-option" for="netctrl-exploit">Poops</label>
-                        <input type="radio" name="kernel" id="lapse-exploit" value="lapse">
-                        <label class="chain-option" for="lapse-exploit">Lapse (Önerilen)</label>
-                    </div>
-                    <button id="jeilbrek" type="button">Kırmayı Başlat</button>
-                    <button id="reloadBtn" type="button">Yenile</button>
-                    <div class="auto-jb">
-                        <label class="auto-jb-label" for="autoJbInput" id="autoJbLabel">Otomatik Kırma</label>
-                        <input id="autoJbInput" type="checkbox">
-                    </div>
-                </form>
-            </section>
-
-            <section style="margin-top: 16px; padding: 16px 20px; background: rgba(255, 204, 0, 0.08); border: 2px dashed #ffd700; border-radius: 8px;">
-                <div style="color: #ffcc00; font-size: 15px; font-weight: bold; letter-spacing: .05em; margin-bottom: 8px; display: flex; align-items: center;">
-                    <span style="font-size: 20px; margin-right: 8px;">👑</span> DİKKAT: SOL ÜSTTE SARI "GoldHEN" LOGOSU GELENE KADAR BEKLEYİN!
-                </div>
-                <div style="color: #e6e6e6; font-size: 13px; line-height: 1.6;">
-                    <p style="margin: 4px 0;">1. Geri sayım bittiğinde kırma işlemi <b>otomatik başlar</b> (veya <b>"Kırmayı Başlat"</b> butonuna basın).</p>
-                    <p style="margin: 4px 0; color: #ffeb99;">2. Lütfen bekleyin! Ekranın sol üst köşesinde <b>SARI RENKLİ "GoldHEN" BİLDİRİMİ</b> ve logosu belirene kadar bekleyin.</p>
-                    <p style="margin: 4px 0;">3. Sarı logo geldikten sonra işlem tamamlanmıştır. Kumandanızın <b>PS Tuşuna</b> basıp ana menüye dönerek tüm oyunlarınıza girebilirsiniz.</p>
-                    <p style="margin: 4px 0; color: #bbb;">⚠️ <i>"Yetersiz Bellek" uyarısı verirse korkmayın, TAMAM deyip bekleyin.</i></p>
-                </div>
-            </section>
-
-            <footer class="foot">
-                <div>VOLKAN BİLGİSAYAR // PS4 & PS5 Kırma, Yazılım & Oyun Servisi</div>
-            </footer>
-        </main>
+<div class="page-container">
+  <main class="main-card">
+    <div class="status-spinner"></div>
+    <div id="wrap">
+      <div id="autoJbLabel">Kırma işlemi yapılıyor, lütfen bekleyin...</div>
+      <div id="cache">Hafıza kontrol ediliyor...</div>
+      <div id="UA" style="display:none;"></div>
     </div>
 
-    <script src="src/main.js"></script>
-    <script src="includes/script.js"></script>
+    <!-- SARI LOGO UYARISI -->
+    <div class="yellow-alert-box">
+      <div class="alert-header">
+        <span class="alert-badge">Önemli Kural</span>
+        <span class="alert-title">SARI "GoldHEN" BİLDİRİMİ GELENE KADAR BEKLEYİN!</span>
+      </div>
+      <ul class="alert-steps">
+        <li>
+          <b>1. HİÇBİR TUŞA BASMAYIN:</b> Kırma işlemi arka planda otomatik olarak yürütülüyor. Lütfen kumandaya dokunmayın ve sayfayı kapatmayın!
+        </li>
+        <li class="step-highlight">
+          <b>2. SARI BİLDİRİMİ BEKLEYİN:</b> Ekranın sol üst köşesinde <b>SARI RENKLİ "GoldHEN" (Coded by SiSTR0)</b> logosu ve bildirimi çıkana kadar bekleyiniz.
+        </li>
+        <li>
+          <b>3. İŞLEM TAMAMLANDI:</b> Sarı logo geldikten sonra kırma bitmiştir! Kumandanızın <b>PS Tuşuna</b> basarak ana menüye dönebilir ve tüm oyunlarınıza girebilirsiniz.
+        </li>
+      </ul>
+      <div class="alert-subtext">
+        <span>⚠️ <b>Hatırlatma:</b> Ekranda <i>"Yetersiz Sistem Belleği"</i> uyarısı çıkarsa korkmayın, kumandadan <b>TAMAM</b> tuşuna basıp bekleyin.</span>
+      </div>
+    </div>
 
-    <script>
-    (function () {
-        var cache = window.applicationCache;
-        var status = document.getElementById('cache');
+    <!-- INSTAGRAM TAKİP KARTI -->
+    <section class="instagram-card">
+      <div class="ig-top">
+        <div class="ig-brand-row">
+          <div class="ig-icon-box">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </div>
+          <div class="ig-titles">
+            <span class="ig-main-title">Volkan Bilgisayar</span>
+            <span class="ig-handle">@volkanbilgisayar</span>
+          </div>
+        </div>
+        <span class="ig-badge-pill">Takip Edin</span>
+      </div>
 
-        function show(message, ready) {
-            if (!status) return;
-            status.textContent = message;
-            status.className = ready ? 'cacheok' : '';
-        }
+      <p class="ig-description">
+        En güncel <b>Türkçe Yamalı Oyunlar</b>, PS4 / PS5 kırma güncellemeleri, oyun yükleme ve teknik destek hizmetleri için bizi Instagram'dan takip edin!
+      </p>
 
-        if (!cache || !document.documentElement.hasAttribute('manifest')) {
-            show('Uygulama önbelleği kullanılamıyor');
-            return;
-        }
+      <div class="ig-features">
+        <span class="ig-feat">🎮 Yeni Çıkan Oyunlar</span>
+        <span class="ig-feat">🇹🇷 Türkçe Oyun Yamaları</span>
+        <span class="ig-feat">⚡ Hızlı Teknik Destek</span>
+        <span class="ig-feat">🛠️ Bakım &amp; Onarım</span>
+      </div>
 
-        cache.addEventListener('checking', function () {
-            show('Çevrimdışı hafıza kontrol ediliyor...');
-        }, false);
-        cache.addEventListener('downloading', function () {
-            show('Çevrimdışı hafızaya yükleniyor...');
-        }, false);
-        cache.addEventListener('progress', function (event) {
-            if (event && event.total > 0) {
-                show('Hafızaya alınıyor: %' + Math.round(event.loaded / event.total * 100));
-            }
-        }, false);
-        cache.addEventListener('cached', function () {
-            show('Çevrimdışı kullanım için hazırlandı (Hafızada)', true);
-        }, false);
-        cache.addEventListener('noupdate', function () {
-            show('Hafızada yüklü — Çevrimdışı kullanıma hazır', true);
-        }, false);
-        cache.addEventListener('updateready', function () {
-            show('Önbellek güncellemesi hazır', true);
-        }, false);
-        cache.addEventListener('error', function () {
-            if (cache.status === cache.IDLE ||
-                cache.status === cache.UPDATEREADY) {
-                show('Hafızada yüklü — Çevrimdışı kullanıma hazır', true);
-            } else {
-                show('Önbellek alınamadı — İnterneti kontrol edip tekrar deneyin');
-            }
-        }, false);
-        cache.addEventListener('obsolete', function () {
-            show('Önbellek eski — Tarayıcı geçmişini temizleyin');
-        }, false);
+      <div class="ig-footer-box">
+        <span>Instagram Arama: <b>volkanbilgisayar</b></span>
+        <span>Takipte Kalın 🔔</span>
+      </div>
+    </section>
 
-        if (!navigator.onLine) {
-            show('Çevrimdışı mod — Hafızadaki sürüm kullanılıyor', true);
-        } else if (cache.status === cache.UPDATEREADY) {
-            show('Önbellek güncellendi — Yeniden yükleniyor...', true);
-        } else if (cache.status === cache.IDLE) {
-            show('Hafızada yüklü — Çevrimdışı kullanıma hazır', true);
-        }
-    }());
-    </script>
+    <!-- Arka Planda Çalışan Geliştirici Günlüğü & Form Kontrolleri (Katlanabilir) -->
+    <details class="dev-details">
+      <summary>Arka Plan İşlem Günlüğü &amp; Kontroller</summary>
+      <pre id="console">Hazır. Kırma işlemi bekleniyor...</pre>
+      <form id="kernel-options" class="dev-controls">
+        <input type="radio" name="kernel" id="netctrl-exploit" value="netctrl">
+        <input type="radio" name="kernel" id="lapse-exploit" value="lapse" checked>
+        <button id="jeilbrek" type="button">Manuel Başlat</button>
+        <button id="reloadBtn" type="button">Yenile</button>
+        <input id="autoJbInput" type="checkbox" checked style="display:none;">
+      </form>
+    </details>
+
+    <div class="footer-sub">
+      VOLKAN BİLGİSAYAR // PS4 9.65 - 11.02 GoldHEN Kırma Sistemi
+    </div>
+  </main>
+</div>
+
+<script src="src/main.js"></script>
+<script src="includes/script.js"></script>
+
+<script>
+(function () {
+    var cache = window.applicationCache;
+    var status = document.getElementById('cache');
+    function show(message, ready) {
+        if (!status) return;
+        status.textContent = message;
+        status.className = ready ? 'cacheok' : '';
+    }
+    if (!cache || !document.documentElement.hasAttribute('manifest')) {
+        show('Menü hazır', true);
+        return;
+    }
+    cache.addEventListener('cached', function () { show('Çevrimdışı hazır (Hafızada)', true); }, false);
+    cache.addEventListener('noupdate', function () { show('Çevrimdışı hazır (Hafızada)', true); }, false);
+    cache.addEventListener('updateready', function () {
+        try { cache.swapCache(); } catch (e) {}
+        show('Önbellek güncellendi', true);
+    }, false);
+    cache.addEventListener('error', function () { show('Çevrimdışı hazır (Hafızada)', true); }, false);
+})();
+</script>
 </body>
-
 </html>

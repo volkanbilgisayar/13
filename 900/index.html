@@ -1,188 +1,357 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="tr">
 <head>
     <link rel="icon" type="image/png" href="../pspulse.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PS4 9.00-9.60 // GOLDHEN KIRMA MENÜSÜ</title>
+    <title>VOLKAN BİLGİSAYAR - PS4 9.00-9.60 Kırma</title>
     <style>
-        :root {
-            --bg: #151515;
-            --panel: #1c1c1c;
-            --panel-2: #242424;
-            --line: #2e2e2e;
-            --line-bright: #454545;
-            --text: #f5f5f5;
-            --muted: #b5b5b5;
-            --dim: #828282;
-            --accent: #a294ff;
-            --red: #ff9b9b;
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            background: #080a0f;
+            background: radial-gradient(circle at 50% 20%, #111827 0%, #080a0f 80%);
+            color: #e2e8f0;
+            font: 15px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
+        a { color: inherit; text-decoration: none; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { background: var(--bg); }
-        html, body { min-height: 100%; }
-        body {
-            background-color: var(--bg);
-            background-image: linear-gradient(rgba(162, 148, 255, .05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(162, 148, 255, .05) 1px, transparent 1px);
-            background-size: 36px 36px;
-            color: var(--text);
+        /* Üst Başlık (Brand Navbar) */
+        #brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            background: rgba(14, 20, 30, 0.95);
+            border-bottom: 1px solid #1e293b;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .brand-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+        }
+        .brand-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: #ffffff;
+        }
+        .brand-text {
             display: flex;
             flex-direction: column;
-            font: 17px/1.4 Consolas, "Liberation Mono", monospace;
-            min-height: 100vh;
-            overflow-x: hidden;
         }
-        a { color: inherit; }
-
-        .app { display: flex; flex: 1 0 auto; flex-direction: column; margin: 0 auto; padding: 14px 26px 12px; width: min(100% - 52px, 1220px); }
-
-        /* Top status bar */
-        .bar {
-            align-items: center;
-            border: 1px solid var(--line-bright);
-            display: flex;
-            font-size: 14px;
-            justify-content: space-between;
-            letter-spacing: .1em;
-            padding: 10px 16px;
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: #f8fafc;
             text-transform: uppercase;
         }
-        .bar b { color: var(--accent); font-weight: 400; }
-        .bar-fw { color: var(--dim); }
-        .bar-fw::before { color: var(--accent); content: "\25CF "; }
-
-        .layout { display: flex; flex: 1 0 auto; flex-direction: column; padding: 20px 0 0; }
-
-        /* Header */
-        .kicker { color: var(--accent); font-size: 14px; letter-spacing: .14em; margin: 0 0 12px; }
-        h1 { font-size: clamp(34px, 5vw, 56px); font-weight: 400; letter-spacing: -.07em; line-height: 1; margin: 0; }
-        h1 em { color: var(--accent); font-style: normal; }
-        .sub { color: var(--muted); font-size: 17px; margin: 13px 0 0; max-width: 720px; }
-        .boot { color: var(--dim); font-size: 14px; list-style: none; margin: 12px 0 0; }
-        .boot li { margin: 3px 0; }
-        .boot b { color: var(--accent); font-weight: 400; }
-        .fw-display { border-left: 2px solid var(--accent); color: var(--text); display: inline-block; font-size: 15px; margin-top: 12px; padding: 5px 10px; }
-
-        /* Status */
-        .status {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            margin-top: 20px;
-            padding: 14px 16px;
+        .brand-sub {
+            font-size: 11px;
+            font-weight: 600;
+            color: #38bdf8;
+            letter-spacing: 0.05em;
         }
-        /* loader.js toggles these two classes on #notify - keep both defined */
-        .notification, .notification2 {
-            background: var(--panel-2);
-            border: 1px solid var(--line-bright);
-            color: var(--text);
-            min-height: 42px;
-            padding: 10px 14px;
+
+        /* Ana Kapsayıcı */
+        .page-container {
+            max-width: 680px;
+            margin: 24px auto;
+            padding: 0 16px 32px;
         }
-        #log { color: var(--text); font-size: 16px; line-height: 1.45; }
-        #log h1 { color: var(--text) !important; font-size: 16px; font-weight: 400; line-height: 1.45; margin: 0; }
-        #console { display: none !important; }
+
+        .main-card {
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .status-spinner {
+            width: 52px;
+            height: 52px;
+            margin: 4px auto 16px;
+            border: 4px solid #1e293b;
+            border-top-color: #38bdf8;
+            border-right-color: #f59e0b;
+            border-radius: 50%;
+            animation: spin 0.85s linear infinite;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #wrap {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .status-title {
+            font-size: 21px;
+            font-weight: 800;
+            margin: 0 0 8px;
+            color: #f8fafc;
+            letter-spacing: 0.02em;
+        }
+
+        /* loader.js elements */
+        #notify, .notification, .notification2 {
+            display: block;
+            margin: 4px 0;
+        }
+        #log h1 {
+            color: #38bdf8 !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            margin: 0 0 4px !important;
+        }
         .jailbreak-status {
-            border-left: 2px solid var(--accent);
-            color: var(--accent);
-            font-size: 17px;
-            margin-top: 10px;
-            padding: 4px 10px;
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 8px;
         }
-        .status-meta {
-            align-items: center;
-            border-top: 1px solid var(--line);
-            color: var(--dim);
-            display: flex;
-            flex-wrap: wrap;
-            font-size: 14px;
-            gap: 10px 16px;
-            margin-top: 10px;
-            padding-top: 10px;
-        }
-        .status-pass { color: var(--accent); }
-        .status-fail { color: var(--red); }
 
-        /* Controls */
-        .controls { border: 1px solid var(--line); margin-top: 14px; padding: 14px; }
-        .section-title {
-            border-bottom: 1px solid var(--line);
-            color: var(--muted);
-            font-size: 14px;
-            letter-spacing: .12em;
-            margin-bottom: 11px;
-            padding: 0 4px 10px;
-            text-transform: uppercase;
-        }
-        .grid { display: grid; gap: 8px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-        .grid button {
-            background: var(--panel);
-            border: 1px solid var(--line-bright);
-            color: var(--text);
-            cursor: pointer;
-            font: inherit;
-            min-height: 48px;
-            padding: 10px 14px;
+        /* SARI LOGO UYARI KUTUSU */
+        .yellow-alert-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(180, 83, 9, 0.12) 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 22px;
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+            animation: pulseBorder 2.5s infinite alternate;
             text-align: left;
         }
-        .grid button:hover, .grid button:focus {
-            background: var(--panel-2);
-            border-color: var(--accent);
-            color: var(--accent);
-            outline: 0;
+        @keyframes pulseBorder {
+            0% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+            100% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.45); border-color: #fbbf24; }
         }
-        .grid button:focus { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
-
-        /* NodePlay */
-        .nodeplay {
-            align-items: center;
-            background: var(--panel);
-            border: 1px solid var(--line-bright);
+        .alert-header {
             display: flex;
-            justify-content: space-between;
-            margin-top: 14px;
-            min-height: 68px;
-            padding: 10px 18px;
-            text-decoration: none;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
         }
-        .nodeplay:hover, .nodeplay:focus { background: var(--panel-2); border-color: var(--accent); outline: 0; }
-        .nodeplay:focus { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
-        .np-label { color: var(--dim); display: block; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
-        .np-name { color: var(--text); display: block; font-size: 24px; margin-top: 2px; }
-        .np-name b { color: var(--accent); font-weight: 400; }
-        .np-open { color: var(--accent); font-size: 14px; }
-
-        /* Footer */
-        .foot {
-            border-top: 1px solid var(--line);
-            color: var(--dim);
+        .alert-badge {
+            background: #f59e0b;
+            color: #000;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .alert-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #fbbf24;
+            letter-spacing: 0.02em;
+        }
+        .alert-steps {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .alert-steps li {
+            border-left: 3px solid #f59e0b;
+            color: #fef3c7;
+            font-size: 14px;
+            line-height: 1.55;
+            margin: 8px 0;
+            padding-left: 12px;
+        }
+        .alert-steps li b {
+            color: #ffffff;
+            background: rgba(245, 158, 11, 0.35);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+        .alert-steps .step-highlight {
+            background: rgba(245, 158, 11, 0.22);
+            border-left: 3px solid #ffffff;
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 0 6px 6px 0;
+        }
+        .alert-subtext {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(245, 158, 11, 0.4);
             font-size: 13px;
+            color: #fde68a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* INSTAGRAM TANITIM KARTI */
+        .instagram-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+            border: 1px solid rgba(225, 48, 108, 0.4);
+            border-radius: 14px;
+            padding: 18px 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            text-align: left;
+        }
+        .instagram-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+        .ig-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .ig-brand-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .ig-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(220, 39, 67, 0.4);
+        }
+        .ig-icon-box svg {
+            width: 22px;
+            height: 22px;
+            fill: #ffffff;
+        }
+        .ig-titles {
+            display: flex;
+            flex-direction: column;
+        }
+        .ig-main-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+        .ig-handle {
+            font-size: 13px;
+            font-weight: 600;
+            color: #f472b6;
+            letter-spacing: 0.02em;
+        }
+        .ig-badge-pill {
+            background: rgba(236, 72, 153, 0.15);
+            color: #f472b6;
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .ig-description {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #cbd5e1;
+            margin: 0 0 12px;
+        }
+        .ig-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .ig-feat {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+        .ig-footer-box {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #e2e8f0;
+        }
+        .ig-footer-box span b {
+            color: #f472b6;
+        }
+
+        /* Gizli / Katlanabilir Geliştirici Günlüğü ve Ek Araçlar */
+        .dev-details {
             margin-top: 16px;
-            padding: 12px 4px 2px;
+            font-size: 11px;
+            color: #64748b;
+            border-top: 1px solid #1e293b;
+            padding-top: 8px;
+        }
+        .dev-details summary {
+            cursor: pointer;
+            outline: none;
+            user-select: none;
+            color: #475569;
+        }
+        .dev-details summary:hover { color: #94a3b8; }
+        .grid {
+            display: grid;
+            gap: 6px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-top: 8px;
+        }
+        .grid button {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #e2e8f0;
+            cursor: pointer;
+            font-size: 11px;
+            padding: 8px;
+            text-align: left;
+        }
+        .grid button:hover {
+            border-color: #38bdf8;
+            color: #38bdf8;
+        }
+
+        .footer-sub {
             text-align: center;
-        }
-        .foot a { color: var(--muted); }
-        .foot a:hover, .foot a:focus { color: var(--accent); }
-
-        @media (max-width: 820px) {
-            body { overflow: auto; }
-            .app { padding: 8px 10px; width: min(100% - 20px, 560px); }
-            .bar { font-size: 12px; padding: 8px 12px; }
-            .layout { padding-top: 14px; }
-            h1 { font-size: 38px; }
-            .sub { font-size: 16px; }
-            .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        }
-
-        @media (max-width: 430px) {
-            .grid { grid-template-columns: 1fr; }
-            h1 { font-size: 34px; }
+            margin-top: 18px;
+            font-size: 12px;
+            color: #64748b;
         }
     </style>
     <script>
-        if (window.applicationCache.status == '0') {
+        if (window.applicationCache && window.applicationCache.status == '0') {
             window.location.replace("version-selector.html");
         }
     </script>
@@ -192,92 +361,137 @@
 </head>
 
 <body onload="if (window.ps4FirmwareSupported) load_exploit();">
-    <div class="app">
-        <header class="bar">
-            <span><b>VOLKAN BİLGİSAYAR</b> // PS4 FW 9.00-9.60</span>
-            <span class="bar-fw">KIRMAYA HAZIR</span>
-        </header>
 
-        <main class="layout">
-            <p class="kicker">$ ./baslat --psfree-9xx</p>
-            <h1>PSFree <em>9.00-9.60</em> Menüsü</h1>
-            <p class="sub">PlayStation 4 Çevrimdışı ve Otomatik GoldHEN Kırma Sistemi.</p>
-            <ul class="boot">
-                <li>[ <b>tamam</b> ] psfree motoru devrede</li>
-                <li>[ <b>tamam</b> ] goldhen v2.4b18.12 hazır</li>
-                <li>[ <b>tamam</b> ] çevrimdışı önbellek aktif</li>
-            </ul>
-            <p class="fw-display">Konsol Sürümü: FW - <span id="PS4fw"></span></p>
+<!-- Üst Başlık (Volkan Bilgisayar) -->
+<header id="brand">
+  <div class="brand-content">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 9 18.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <span class="brand-title">VOLKAN BİLGİSAYAR</span>
+      <span class="brand-sub">PS4 Kırma &amp; Yazılım Servisi</span>
+    </div>
+  </div>
+</header>
 
-            <div class="status">
-                <div id="notify" class="notification"><div id="log"></div></div>
-                <pre id="console" style="display:none" aria-hidden="true"></pre>
-                <div class="jailbreak-status" id="msgs2">Kırmaya Hazır</div>
-                <div class="status-meta">
-                    <span class="status-pass">Başarılı Deneme: <span id="passCounter">0</span></span>
-                    <span class="status-fail">Başarısız Deneme: <span id="failCounter">0</span></span>
-                </div>
-            </div>
-
-            <section class="controls">
-                <div class="section-title">Ek Araçlar ve Özellikler (Payloads)</div>
-                <div class="grid">
-                    <button onclick="load_PSFreeFix()" onMouseOver="document.getElementById('msgs2').innerHTML='PSFree Düzeltmesi - Kırma takılmalarını giderir'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">PSFree Fix</button>
-                    <button onclick="load_ftp()" onMouseOver="document.getElementById('msgs2').innerHTML='FTP Sunucusu - Bilgisayardan dosya aktarımı için FTP bağlantısını açar'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">FTP Sunucusu</button>
-                    <button onclick="load_ps4debug()" onMouseOver="document.getElementById('msgs2').innerHTML='PS4Debug - Hata ayıklama modunu aktifleştirir'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">PS4Debug</button>
-                    <button onclick="load_app2usb()" onMouseOver="document.getElementById('msgs2').innerHTML='App2USB - Oyunları harici USB belleğe taşır'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">App2USB</button>
-                    <button onclick="load_backup()" onMouseOver="document.getElementById('msgs2').innerHTML='Yedekleme - Sistem verilerini ve kayıtları USB belleğe yedekler'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">Yedekleme (Backup)</button>
-                    <button onclick="load_restore()" onMouseOver="document.getElementById('msgs2').innerHTML='Geri Yükleme - USB bellekteki verileri sisteme geri yükler'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">Geri Yükleme (Restore)</button>
-                    <button onclick="load_disable_updates()" onMouseOver="document.getElementById('msgs2').innerHTML='Güncellemeleri Kapat - Otomatik güncellemeleri engeller (Önerilir)'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">Güncellemeleri Kapat</button>
-                    <button onclick="load_enable_updates()" onMouseOver="document.getElementById('msgs2').innerHTML='Güncellemeleri Aç - Sistem güncellemelerine tekrar izin verir'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">Güncellemeleri Aç</button>
-                    <button onclick="load_appcache_install()" onMouseOver="document.getElementById('msgs2').innerHTML='Önbellek Kur - Çevrimdışı menüyü tarayıcıya kaydeder'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">Önbellek Kur (AppCache)</button>
-                    <button onclick="load_history_blocker()" onMouseOver="document.getElementById('msgs2').innerHTML='Geçmişi Engelle - Tarayıcı geçmişinin kaydedilmesini önler'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">Geçmişi Engelle</button>
-                    <button onclick="load_pup_decrypt()" onMouseOver="document.getElementById('msgs2').innerHTML='PUP Çözücü - PS4 güncelleme dosyalarını inceler'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">PUP Çözücü</button>
-                    <button onclick="load_rif_renamer()" onMouseOver="document.getElementById('msgs2').innerHTML='RIF Düzenle - Oyun lisans ve kilit dosyalarını yönetir'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">RIF Lisans Düzenle</button>
-                    <button onclick="load_webrte()" onMouseOver="document.getElementById('msgs2').innerHTML='WebRTE - Oyun hileleri ve gerçek zamanlı düzenleme modunu açar'" onmouseout="document.getElementById('msgs2').innerHTML='Kırmaya Hazır'">WebRTE (Hile)</button>
-                </div>
-            </section>
-
-            <section style="margin-top: 16px; padding: 16px 20px; background: rgba(255, 204, 0, 0.08); border: 2px dashed #ffd700; border-radius: 8px;">
-                <div style="color: #ffcc00; font-size: 15px; font-weight: bold; letter-spacing: .05em; margin-bottom: 8px; display: flex; align-items: center;">
-                    <span style="font-size: 20px; margin-right: 8px;">👑</span> DİKKAT: SOL ÜSTTE SARI "GoldHEN" LOGOSU GELENE KADAR BEKLEYİN!
-                </div>
-                <div style="color: #e6e6e6; font-size: 13px; line-height: 1.6;">
-                    <p style="margin: 4px 0;">1. Kırma işlemi <b>otomatik olarak yükleniyor</b>, lütfen kumandaya ve ekrana dokunmadan bekleyin.</p>
-                    <p style="margin: 4px 0; color: #ffeb99;">2. Ekranın sol üst köşesinde <b>SARI RENKLİ "GoldHEN" BİLDİRİMİ</b> ve logosu belirdiğinde işlem tamamlanmıştır!</p>
-                    <p style="margin: 4px 0;">3. Sarı logo geldikten sonra kumandanızın <b>PS Tuşuna</b> basarak ana menüye dönüp oyunlarınıza girebilirsiniz.</p>
-                    <p style="margin: 4px 0; color: #bbb;">⚠️ <i>"Yetersiz Sistem Belleği" uyarısı verirse korkmayın, TAMAM tuşuna basıp bekleyin.</i></p>
-                </div>
-            </section>
-
-            <footer class="foot">
-                VOLKAN BİLGİSAYAR // PS4 FW 9.00 - 9.60 GoldHEN Kırma Sistemi
-            </footer>
-        </main>
+<div class="page-container">
+  <main class="main-card">
+    <div class="status-spinner"></div>
+    <div id="wrap">
+      <div class="status-title">Kırma İşlemi Yapılıyor, Lütfen Bekleyin...</div>
+      <div id="notify" class="notification"><div id="log"></div></div>
+      <div class="jailbreak-status" id="msgs2">PSFree Kırma Motoru Başlatılıyor...</div>
     </div>
 
-    <script>
-        // Firmware detection
-        UA = navigator.userAgent.substring(navigator.userAgent.indexOf("6.72 (") + 28, navigator.userAgent.indexOf(") Apple"));
-        // 9.xx
-        if (UA == "layStation 4/9.00") UA = "9.00";
-        if (UA == "layStation 4/9.03") UA = "9.03";
-        if (UA == "layStation 4/9.04") UA = "9.04";
-        if (UA == "layStation 4/9.50") UA = "9.50";
-        if (UA == "layStation 4/9.51") UA = "9.51";
-        if (UA == "layStation 4/9.60") UA = "9.60";
-        if (UA == "layStation 4/99.99") UA = "99.99";
-        var supportedFW = ["9.00", "9.03", "9.04", "9.50", "9.51", "9.60", "99.99"];
-        window.ps4FirmwareSupported = supportedFW.indexOf(UA) !== -1;
-        if (!window.ps4FirmwareSupported) alert("Bu kırma sayfası yalnızca PS4 FW 9.00 - 9.60 sürümleri içindir!");
-        document.getElementById("PS4fw").innerHTML = "" + UA + "";
-        // Statistics initialization
-        if (localStorage.passcount == null || localStorage.passcount == undefined) localStorage.passcount = 0;
-        if (localStorage.failcount == null || localStorage.failcount == undefined) localStorage.failcount = 0;
-        // Update counters on page load
-        if (document.getElementById("passCounter")) document.getElementById("passCounter").innerHTML = localStorage.passcount;
-        if (document.getElementById("failCounter")) document.getElementById("failCounter").innerHTML = localStorage.failcount;
-    </script>
-</body>
+    <!-- SARI LOGO UYARISI -->
+    <div class="yellow-alert-box">
+      <div class="alert-header">
+        <span class="alert-badge">Önemli Kural</span>
+        <span class="alert-title">SARI "GoldHEN" BİLDİRİMİ GELENE KADAR BEKLEYİN!</span>
+      </div>
+      <ul class="alert-steps">
+        <li>
+          <b>1. HİÇBİR TUŞA BASMAYIN:</b> Kırma işlemi arka planda otomatik olarak yürütülüyor. Lütfen kumandaya dokunmayın ve sayfayı kapatmayın!
+        </li>
+        <li class="step-highlight">
+          <b>2. SARI BİLDİRİMİ BEKLEYİN:</b> Ekranın sol üst köşesinde <b>SARI RENKLİ "GoldHEN" (Coded by SiSTR0)</b> logosu ve bildirimi çıkana kadar bekleyiniz.
+        </li>
+        <li>
+          <b>3. İŞLEM TAMAMLANDI:</b> Sarı logo geldikten sonra kırma bitmiştir! Kumandanızın <b>PS Tuşuna</b> basarak ana menüye dönebilir ve tüm oyunlarınıza girebilirsiniz.
+        </li>
+      </ul>
+      <div class="alert-subtext">
+        <span>⚠️ <b>Hatırlatma:</b> Ekranda <i>"Yetersiz Sistem Belleği"</i> uyarısı çıkarsa korkmayın, kumandadan <b>TAMAM</b> tuşuna basıp bekleyin.</span>
+      </div>
+    </div>
 
+    <!-- INSTAGRAM TAKİP KARTI -->
+    <section class="instagram-card">
+      <div class="ig-top">
+        <div class="ig-brand-row">
+          <div class="ig-icon-box">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </div>
+          <div class="ig-titles">
+            <span class="ig-main-title">Volkan Bilgisayar</span>
+            <span class="ig-handle">@volkanbilgisayar</span>
+          </div>
+        </div>
+        <span class="ig-badge-pill">Takip Edin</span>
+      </div>
+
+      <p class="ig-description">
+        En güncel <b>Türkçe Yamalı Oyunlar</b>, PS4 / PS5 kırma güncellemeleri, oyun yükleme ve teknik destek hizmetleri için bizi Instagram'dan takip edin!
+      </p>
+
+      <div class="ig-features">
+        <span class="ig-feat">🎮 Yeni Çıkan Oyunlar</span>
+        <span class="ig-feat">🇹🇷 Türkçe Oyun Yamaları</span>
+        <span class="ig-feat">⚡ Hızlı Teknik Destek</span>
+        <span class="ig-feat">🛠️ Bakım &amp; Onarım</span>
+      </div>
+
+      <div class="ig-footer-box">
+        <span>Instagram Arama: <b>volkanbilgisayar</b></span>
+        <span>Takipte Kalın 🔔</span>
+      </div>
+    </section>
+
+    <!-- Ek Özellikler & Geliştirici Günlüğü (Katlanabilir) -->
+    <details class="dev-details">
+      <summary>Gelişmiş Araçlar &amp; Payloads (İsteğe Bağlı)</summary>
+      <div class="grid">
+        <button onclick="load_PSFreeFix()">PSFree Fix</button>
+        <button onclick="load_ftp()">FTP Sunucusu</button>
+        <button onclick="load_ps4debug()">PS4Debug</button>
+        <button onclick="load_app2usb()">App2USB</button>
+        <button onclick="load_backup()">Yedekleme</button>
+        <button onclick="load_restore()">Geri Yükleme</button>
+        <button onclick="load_disable_updates()">Güncellemeleri Kapat</button>
+        <button onclick="load_enable_updates()">Güncellemeleri Aç</button>
+        <button onclick="load_appcache_install()">Önbellek Kur</button>
+        <button onclick="load_history_blocker()">Geçmişi Engelle</button>
+        <button onclick="load_pup_decrypt()">PUP Çözücü</button>
+        <button onclick="load_rif_renamer()">RIF Lisans</button>
+        <button onclick="load_webrte()">WebRTE</button>
+      </div>
+      <pre id="console" style="display:none" aria-hidden="true"></pre>
+      <div style="display:none;">
+        <span id="PS4fw"></span>
+        <span id="passCounter">0</span>
+        <span id="failCounter">0</span>
+      </div>
+    </details>
+
+    <div class="footer-sub">
+      VOLKAN BİLGİSAYAR // PS4 FW 9.00 - 9.60 GoldHEN Kırma Sistemi
+    </div>
+  </main>
+</div>
+
+<script>
+    // Firmware detection
+    UA = navigator.userAgent.substring(navigator.userAgent.indexOf("6.72 (") + 28, navigator.userAgent.indexOf(") Apple"));
+    if (UA == "layStation 4/9.00") UA = "9.00";
+    if (UA == "layStation 4/9.03") UA = "9.03";
+    if (UA == "layStation 4/9.04") UA = "9.04";
+    if (UA == "layStation 4/9.50") UA = "9.50";
+    if (UA == "layStation 4/9.51") UA = "9.51";
+    if (UA == "layStation 4/9.60") UA = "9.60";
+    if (UA == "layStation 4/99.99") UA = "99.99";
+    var supportedFW = ["9.00", "9.03", "9.04", "9.50", "9.51", "9.60", "99.99"];
+    window.ps4FirmwareSupported = supportedFW.indexOf(UA) !== -1;
+    if (!window.ps4FirmwareSupported) alert("Bu kırma sayfası yalnızca PS4 FW 9.00 - 9.60 sürümleri içindir!");
+    if (document.getElementById("PS4fw")) document.getElementById("PS4fw").innerHTML = "" + UA + "";
+    if (localStorage.passcount == null || localStorage.passcount == undefined) localStorage.passcount = 0;
+    if (localStorage.failcount == null || localStorage.failcount == undefined) localStorage.failcount = 0;
+    if (document.getElementById("passCounter")) document.getElementById("passCounter").innerHTML = localStorage.passcount;
+    if (document.getElementById("failCounter")) document.getElementById("failCounter").innerHTML = localStorage.failcount;
+</script>
+</body>
 </html>
