@@ -1,449 +1,720 @@
 <!DOCTYPE html>
 <html lang="tr" manifest="navigation.manifest">
 <head>
-    <link rel="icon" type="image/png" href="pspulse.png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PS4 OTOMATİK KIRMA MENÜSÜ // GOLDHEN HOST</title>
-    <style>
-        :root {
-            --bg: #121214;
-            --panel: #1a1a1f;
-            --panel-2: #24242d;
-            --line: #2e2e38;
-            --line-bright: #48485a;
-            --text: #f5f5f5;
-            --muted: #b5b5c5;
-            --dim: #828294;
-            --accent: #a294ff;
-            --gold: #ffcc00;
-            --gold-bg: rgba(255, 204, 0, 0.08);
-            --gold-border: #ffd700;
-            --green: #2ecc71;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VOLKAN BİLGİSAYAR - PS4 Otomatik Kırma Sistemi</title>
+<link rel="icon" type="image/png" href="pspulse.png">
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: #080a0f;
+    background: radial-gradient(circle at 50% 20%, #111827 0%, #080a0f 80%);
+    color: #e2e8f0;
+    font: 15px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
 
-        * { box-sizing: border-box; }
-        html { background: var(--bg); }
-        html, body { margin: 0; min-height: 100%; }
-        body {
-            background-color: var(--bg);
-            background-image: linear-gradient(rgba(162, 148, 255, .04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(162, 148, 255, .04) 1px, transparent 1px);
-            background-size: 36px 36px;
-            color: var(--text);
-            font: 16px/1.4 Consolas, "Liberation Mono", monospace;
-        }
-        a { color: inherit; text-decoration: none; }
+  /* Üst Başlık (Brand Navbar) */
+  #brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    background: rgba(14, 20, 30, 0.95);
+    border-bottom: 1px solid #1e293b;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  .brand-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0284c7, #2563eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+  }
+  .brand-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: #ffffff;
+  }
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .brand-title {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #f8fafc;
+    text-transform: uppercase;
+  }
+  .brand-sub {
+    font-size: 11px;
+    font-weight: 600;
+    color: #38bdf8;
+    letter-spacing: 0.05em;
+  }
 
-        .app { display: flex; flex-direction: column; margin: 0 auto; max-width: 1100px; min-height: 100vh; padding: 14px 22px 16px; }
+  /* Ana Kapsayıcı */
+  .page-container {
+    max-width: 720px;
+    margin: 24px auto;
+    padding: 0 16px 32px;
+  }
 
-        /* Top status bar */
-        .bar {
-            align-items: center;
-            border: 1px solid var(--line-bright);
-            display: flex;
-            font-size: 13px;
-            justify-content: space-between;
-            letter-spacing: .1em;
-            padding: 8px 14px;
-            text-transform: uppercase;
-        }
-        .bar b { color: var(--gold); font-weight: 600; }
-        .bar-ready { color: var(--green); }
-        .bar-ready::before { content: "● "; color: var(--green); }
+  .main-card {
+    background: rgba(15, 23, 42, 0.88);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.1);
+  }
 
-        .layout { display: flex; flex: 1 0 auto; flex-direction: column; padding: 16px 0 0; }
+  /* Durum Başlığı & Dönen Halka */
+  .status-spinner {
+    width: 52px;
+    height: 52px;
+    margin: 4px auto 16px;
+    border: 4px solid #1e293b;
+    border-top-color: #38bdf8;
+    border-right-color: #f59e0b;
+    border-radius: 50%;
+    animation: spin 0.85s linear infinite;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
 
-        /* Auto-Detect Spotlight Card */
-        .detected-card {
-            background: linear-gradient(180deg, #201e18 0%, #171614 100%);
-            border: 2px solid var(--gold-border);
-            border-radius: 8px;
-            box-shadow: 0 0 24px rgba(255, 204, 0, 0.18);
-            margin-bottom: 20px;
-            padding: 20px 24px;
-            position: relative;
-        }
-        .detected-header {
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 204, 0, 0.25);
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            padding-bottom: 12px;
-            margin-bottom: 16px;
-        }
-        .detected-badge {
-            background: var(--gold);
-            border-radius: 4px;
-            color: #121214;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: .08em;
-            padding: 4px 10px;
-            text-transform: uppercase;
-        }
-        .detected-ver {
-            color: var(--gold);
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: .05em;
-        }
+  #wrap {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  #state {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0 0 6px;
+    color: #f8fafc;
+    letter-spacing: 0.02em;
+  }
+  #det {
+    font-size: 14px;
+    color: #94a3b8;
+    margin: 0 0 10px;
+  }
+  #det b {
+    color: #f8fafc;
+    font-weight: 700;
+  }
+  #cache {
+    font-size: 12px;
+    color: #64748b;
+    min-height: 18px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  #cache.cacheok {
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
 
-        /* Giant Launch Button */
-        .launch-btn-container { margin: 16px 0; text-align: center; }
-        .huge-launch-btn {
-            background: linear-gradient(180deg, #ffdb4d 0%, #e6b800 100%);
-            border: 2px solid #fff;
-            border-radius: 8px;
-            box-shadow: 0 6px 20px rgba(255, 204, 0, 0.35);
-            color: #111;
-            cursor: pointer;
-            display: block;
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: .06em;
-            padding: 18px 24px;
-            text-align: center;
-            transition: transform .15s, box-shadow .15s;
-        }
-        .huge-launch-btn:hover, .huge-launch-btn:focus {
-            background: #fff;
-            box-shadow: 0 0 0 4px var(--gold), 0 8px 28px rgba(255, 204, 0, 0.5);
-            color: #000;
-            outline: none;
-            transform: scale(1.02);
-        }
-        .launch-sub {
-            color: #3a3200;
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-top: 6px;
-            letter-spacing: .02em;
-        }
+  .ok { color: #34d399; }
+  .bad { color: #f87171; }
+  .warn { color: #fbbf24; }
 
-        /* GoldHEN Notice Banner */
-        .goldhen-banner {
-            background: rgba(255, 204, 0, 0.08);
-            border: 1px dashed var(--gold);
-            border-radius: 6px;
-            margin-top: 14px;
-            padding: 14px 18px;
-        }
-        .goldhen-title {
-            align-items: center;
-            color: var(--gold);
-            display: flex;
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: .05em;
-            margin-bottom: 10px;
-        }
-        .goldhen-title span { font-size: 20px; margin-right: 8px; }
-        .instructions-list {
-            color: #e6e6e6;
-            font-size: 14px;
-            line-height: 1.6;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        .instructions-list li {
-            border-left: 3px solid var(--gold);
-            margin: 8px 0;
-            padding-left: 12px;
-        }
-        .instructions-list li b { color: var(--gold); }
-        .instructions-list .step-important {
-            background: rgba(255, 204, 0, 0.14);
-            border-left: 3px solid #fff;
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 0 4px 4px 0;
-        }
+  /* BÜYÜK [ X ] BAŞLAT BUTONU */
+  .action-container {
+    margin: 18px 0 24px;
+    text-align: center;
+  }
+  .action-btn {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+    border: 2px solid #fde68a;
+    border-radius: 12px;
+    box-shadow: 0 6px 25px rgba(245, 158, 11, 0.45);
+    color: #0b0d13;
+    cursor: pointer;
+    display: block;
+    font-size: 21px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    padding: 18px 24px;
+    text-align: center;
+    transition: all 0.2s ease;
+    outline: none;
+  }
+  .action-btn:hover, .action-btn:focus {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.4), 0 10px 35px rgba(245, 158, 11, 0.7);
+    color: #000000;
+    transform: scale(1.02);
+  }
+  .action-btn-sub {
+    color: #451a03;
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 6px;
+    letter-spacing: 0.01em;
+  }
 
-        /* Manual Sürüm Seçimi Bölümü */
-        .manual-section {
-            border: 1px solid var(--line);
-            border-radius: 6px;
-            margin-top: 18px;
-            padding: 14px;
-        }
-        .manual-toggle {
-            align-items: center;
-            border-bottom: 1px solid var(--line);
-            color: var(--muted);
-            cursor: pointer;
-            display: flex;
-            font-size: 13px;
-            justify-content: space-between;
-            letter-spacing: .08em;
-            margin-bottom: 12px;
-            padding: 4px 4px 10px;
-            text-transform: uppercase;
-        }
-        .manual-toggle b { color: var(--text); }
-        .grid { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .row {
-            align-items: center;
-            background: var(--panel);
-            border: 1px solid var(--line);
-            display: flex;
-            min-height: 58px;
-            padding: 10px 14px;
-        }
-        .row:hover, .row:focus {
-            background: var(--panel-2);
-            border-color: var(--accent);
-            outline: 0;
-        }
-        .num { color: var(--dim); font-size: 13px; min-width: 36px; }
-        .name { color: var(--text); display: block; font-size: 16px; font-weight: 500; }
-        .meta { color: var(--dim); display: block; font-size: 12px; margin-top: 2px; }
-        .go { color: var(--dim); font-size: 12px; margin-left: auto; padding-left: 8px; }
-        .row:hover .go, .row:focus .go { color: var(--accent); }
+  /* SARI LOGO UYARI KUTUSU */
+  .yellow-alert-box {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(180, 83, 9, 0.12) 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+    animation: pulseBorder 2.5s infinite alternate;
+    text-align: left;
+  }
+  @keyframes pulseBorder {
+    0% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+    100% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.45); border-color: #fbbf24; }
+  }
+  .alert-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .alert-badge {
+    background: #f59e0b;
+    color: #000;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .alert-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fbbf24;
+    letter-spacing: 0.02em;
+  }
+  .alert-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .alert-steps li {
+    border-left: 3px solid #f59e0b;
+    color: #fef3c7;
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 8px 0;
+    padding-left: 12px;
+  }
+  .alert-steps li b {
+    color: #ffffff;
+    background: rgba(245, 158, 11, 0.35);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  .alert-steps .step-highlight {
+    background: rgba(245, 158, 11, 0.22);
+    border-left: 3px solid #ffffff;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+  }
+  .alert-subtext {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(245, 158, 11, 0.4);
+    font-size: 13px;
+    color: #fde68a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-        .cache-notice {
-            color: var(--dim);
-            font-size: 12px;
-            margin-top: 14px;
-            text-align: center;
-        }
+  /* INSTAGRAM TANITIM KARTI */
+  .instagram-card {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+    border: 1px solid rgba(225, 48, 108, 0.4);
+    border-radius: 14px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    margin-bottom: 22px;
+  }
+  .instagram-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  }
+  .ig-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .ig-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ig-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(220, 39, 67, 0.4);
+  }
+  .ig-icon-box svg {
+    width: 22px;
+    height: 22px;
+    fill: #ffffff;
+  }
+  .ig-titles {
+    display: flex;
+    flex-direction: column;
+  }
+  .ig-main-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f8fafc;
+  }
+  .ig-handle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f472b6;
+    letter-spacing: 0.02em;
+  }
+  .ig-badge-pill {
+    background: rgba(236, 72, 153, 0.15);
+    color: #f472b6;
+    border: 1px solid rgba(236, 72, 153, 0.3);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .ig-description {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #cbd5e1;
+    margin: 0 0 12px;
+  }
+  .ig-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .ig-feat {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+  .ig-footer-box {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #e2e8f0;
+  }
+  .ig-footer-box span b {
+    color: #f472b6;
+  }
 
-        /* Footer */
-        .foot {
-            border-top: 1px solid var(--line);
-            color: var(--dim);
-            font-size: 12px;
-            margin-top: 18px;
-            padding: 12px 4px 2px;
-            text-align: center;
-        }
+  /* Manuel Liste Bölümü */
+  .manual-section {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .manual-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #1e293b;
+  }
+  .manual-grid {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .manual-row {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    transition: all 0.15s ease;
+  }
+  .manual-row:hover, .manual-row:focus {
+    background: #1e293b;
+    border-color: #38bdf8;
+    color: #38bdf8;
+    outline: none;
+    transform: translateY(-1px);
+  }
+  .fw-num {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 28px;
+  }
+  .fw-name {
+    color: #f1f5f9;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .fw-desc {
+    color: #64748b;
+    display: block;
+    font-size: 11px;
+    margin-top: 1px;
+  }
+  .fw-arrow {
+    color: #64748b;
+    font-size: 11px;
+    margin-left: auto;
+    font-weight: 700;
+  }
+  .manual-row:hover .fw-arrow, .manual-row:focus .fw-arrow {
+    color: #38bdf8;
+  }
 
-        @media (max-width: 760px) {
-            .app { padding: 8px 10px; }
-            .grid { grid-template-columns: 1fr; }
-            .huge-launch-btn { font-size: 20px; padding: 14px 18px; }
-            .detected-ver { font-size: 17px; }
-        }
-    </style>
+  /* Alt Bilgi */
+  .footer-brand {
+    text-align: center;
+    color: #64748b;
+    font-size: 12px;
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px solid #1e293b;
+  }
+
+  @media (max-width: 600px) {
+    .page-container { padding: 0 10px 24px; margin: 14px auto; }
+    .main-card { padding: 18px 14px; }
+    .action-btn { font-size: 18px; padding: 15px 16px; }
+    .manual-grid { grid-template-columns: 1fr; }
+    #state { font-size: 19px; }
+  }
+</style>
 </head>
 <body>
-    <div class="app">
-        <header class="bar">
-            <span><b>PS4 KIRMA MENÜSÜ</b> // OTOMATİK SİSTEM</span>
-            <span class="bar-ready">HAZIR</span>
-        </header>
 
-        <main class="layout">
-            <!-- Otomatik Tespit Paneli -->
-            <section class="detected-card" id="autoCard">
-                <div class="detected-header">
-                    <span class="detected-badge">🎮 OTOMATİK CİHAZ TESPİTİ</span>
-                    <span class="detected-ver" id="detectedFwText">Cihazınız taranıyor...</span>
-                </div>
+<!-- Üst Başlık (Volkan Bilgisayar) -->
+<header id="brand">
+  <div class="brand-content">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 9 18.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <span class="brand-title">VOLKAN BİLGİSAYAR</span>
+      <span class="brand-sub">PS4 Kırma &amp; Yazılım Servisi</span>
+    </div>
+  </div>
+</header>
 
-                <div class="launch-btn-container">
-                    <a id="autoLaunchBtn" href="#" class="huge-launch-btn" tabindex="0">
-                        ▶ [ X ] KIRMAYI BAŞLAT
-                        <span class="launch-sub" id="countdownSub">Tespit ediliyor...</span>
-                    </a>
-                </div>
-
-                <div class="goldhen-banner">
-                    <div class="goldhen-title">
-                        <span>👑</span> <b>MÜŞTERİ KULLANIM TALİMATI (ÇOK ÖNEMLİ):</b>
-                    </div>
-                    <ul class="instructions-list">
-                        <li><b>1. ADIM:</b> Yukarıdaki sarı <b>"KIRMAYI BAŞLAT"</b> butonuna basın (veya kumandadan <b>X</b> tuşuna basın).</li>
-                        <li class="step-important">
-                            <b>2. ADIM (BEKLEYİN):</b> Sayfa açılınca ekrana dokunmayın. Ekranın sol üst köşesinde <b>SARI RENKLİ "GoldHEN" LOGOSU</b> ve bildirimi çıkana kadar bekleyin!
-                        </li>
-                        <li><b>3. ADIM (TAMAMLANDI):</b> Sarı logo geldikten sonra kırma işlemi bitmiştir! Kumandanızın <b>PS Tuşuna</b> basıp ana menüye dönerek tüm oyunlarınıza girebilirsiniz.</li>
-                        <li>📌 <b>NOT:</b> Ekranda <i>"Yetersiz Sistem Belleği"</i> uyarısı çıkarsa korkmayın, bu normaldir. Sadece <b>TAMAM</b> deyip bekleyin.</li>
-                    </ul>
-                </div>
-            </section>
-
-            <!-- Manuel Liste (Gerekirse diye altta) -->
-            <section class="manual-section">
-                <div class="manual-toggle">
-                    <span>Tüm Sürümler (Manuel Liste)</span>
-                    <span style="font-size: 11px; color: var(--dim);">&uarr; &darr; Yön Tuşları ile Seçebilirsiniz</span>
-                </div>
-                <nav class="grid">
-                    <a class="row" href="900/cache.html" id="fwRow900">
-                        <span class="num">01</span>
-                        <span><span class="name">FW 9.00 – 9.60</span><span class="meta">PSFree + Lapse // Tavsiye Edilen</span></span>
-                        <span class="go">[ SEÇ ]</span>
-                    </a>
-                    <a class="row" href="css/latest/index.html" id="fwRow1100">
-                        <span class="num">02</span>
-                        <span><span class="name">FW 9.65 – 11.02</span><span class="meta">CSSFontFace // Otomatik GoldHEN</span></span>
-                        <span class="go">[ SEÇ ]</span>
-                    </a>
-                    <a class="row" href="1300/index.html" id="fwRow1300">
-                        <span class="num">03</span>
-                        <span><span class="name">FW 11.50 – 13.00</span><span class="meta">SlopKit WebKit // Lapse & Poops</span></span>
-                        <span class="go">[ SEÇ ]</span>
-                    </a>
-                    <a class="row" href="1352/index.html" id="fwRow1352">
-                        <span class="num">04</span>
-                        <span><span class="name">FW 13.02 – 13.52</span><span class="meta">SlopKit Relapse // Yeni Sürümler</span></span>
-                        <span class="go">[ SEÇ ]</span>
-                    </a>
-                    <a class="row" href="700/cache.html" id="fwRow700">
-                        <span class="num">05</span>
-                        <span><span class="name">FW 7.00 – 8.52</span><span class="meta">PSFree + Lapse // GoldHEN</span></span>
-                        <span class="go">[ SEÇ ]</span>
-                    </a>
-                    <a class="row" href="672/index.html" id="fwRow672">
-                        <span class="num">06</span>
-                        <span><span class="name">FW 6.72</span><span class="meta">Özel Kırma Menüsü & Araçlar</span></span>
-                        <span class="go">[ SEÇ ]</span>
-                    </a>
-                    <a class="row" href="505/index.html" id="fwRow505">
-                        <span class="num">07</span>
-                        <span><span class="name">FW 5.05</span><span class="meta">Klasik Kararlı Kırma Menüsü</span></span>
-                        <span class="go">[ SEÇ ]</span>
-                    </a>
-                </nav>
-            </section>
-
-            <div class="cache-notice" id="navigation-cache-status">
-                [ ... ] Çevrimdışı hafıza kontrol ediliyor
-            </div>
-
-            <footer class="foot">
-                PlayStation 4 Çevrimdışı Kırma Sistemi // GoldHEN Host
-            </footer>
-        </main>
+<div class="page-container">
+  <main class="main-card">
+    <div class="status-spinner"></div>
+    <div id="wrap">
+      <div id="state">Yazılım sürümü tespit ediliyor...</div>
+      <div id="det">Cihazınız taranıyor, lütfen bekleyin...</div>
+      <div id="cache">Hafıza kontrol ediliyor...</div>
     </div>
 
-    <script>
-        (function () {
-            var ua = navigator.userAgent;
-            var detectedText = document.getElementById('detectedFwText');
-            var launchBtn = document.getElementById('autoLaunchBtn');
-            var countdownSub = document.getElementById('countdownSub');
-            var targetUrl = null;
-            var countdown = 4;
-            var timer = null;
+    <!-- BÜYÜK [ X ] BAŞLAT BUTONU -->
+    <div class="action-container">
+      <a id="mainActionBtn" href="#" class="action-btn" tabindex="0">
+        ▶ İŞLEM İÇİN [ X ] TUŞUNA BASIN
+        <span class="action-btn-sub" id="btnCountdownSub">Yazılım sürümü bekleniyor...</span>
+      </a>
+    </div>
 
-            // PS4 Sürüm Tespiti
-            function getPS4Firmware() {
-                var m = ua.match(/PlayStation\s+4[\/ ]([0-9]+)\.([0-9]+)/i);
-                if (!m) return null;
-                var major = parseInt(m[1], 10);
-                var minorStr = m[2];
-                if (minorStr.length === 1) minorStr = minorStr + '0';
-                var minor = parseInt(minorStr, 10);
-                var num = major + (minor / 100);
-                var str = major + '.' + (minor < 10 ? '0' + minor : minor);
-                return { major: major, minor: minor, num: num, str: str };
-            }
+    <!-- SARI LOGO UYARISI -->
+    <div class="yellow-alert-box">
+      <div class="alert-header">
+        <span class="alert-badge">Önemli Kural</span>
+        <span class="alert-title">SARI LOGO GELENE KADAR BEKLEYİNİZ!</span>
+      </div>
+      <ul class="alert-steps">
+        <li>
+          <b>1. ADIM:</b> Yukarıdaki butona tıklayın veya kumandadan <b>[ X ]</b> tuşuna basın <i>(veya 4 saniye bekleyin, kendisi başlar)</i>.
+        </li>
+        <li class="step-highlight">
+          <b>2. ADIM (BEKLEYİN):</b> Sayfa açılınca ekrana dokunmayın. Ekranın sol üst köşesinde <b>SARI RENKLİ "GoldHEN" LOGOSU</b> ve bildirimi gelene kadar bekleyiniz!
+        </li>
+        <li>
+          <b>3. ADIM (TAMAMLANDI):</b> Sarı logo geldikten sonra kırma işlemi bitmiştir! Kumandanızın <b>PS Tuşuna</b> basıp ana menüye dönerek tüm oyunlarınıza girebilirsiniz.
+        </li>
+      </ul>
+      <div class="alert-subtext">
+        <span>⚠️ <b>Uyarı:</b> <i>"Yetersiz Sistem Belleği"</i> uyarısı verirse korkmayın, kumandadan <b>TAMAM</b> tuşuna basıp bekleyin. Sarı logo gelene kadar sayfayı kapatmayınız!</span>
+      </div>
+    </div>
 
-            var ps4Info = getPS4Firmware();
+    <!-- INSTAGRAM TAKİP KARTI -->
+    <section class="instagram-card">
+      <div class="ig-top">
+        <div class="ig-brand-row">
+          <div class="ig-icon-box">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </div>
+          <div class="ig-titles">
+            <span class="ig-main-title">Volkan Bilgisayar</span>
+            <span class="ig-handle">@volkanbilgisayar</span>
+          </div>
+        </div>
+        <span class="ig-badge-pill">Takip Edin</span>
+      </div>
 
-            if (ps4Info) {
-                var fw = ps4Info.num;
-                var fwName = 'PS4 v' + ps4Info.str;
-                detectedText.innerHTML = 'CİHAZINIZ: <b style="color:#fff;">' + fwName + '</b>';
+      <p class="ig-description">
+        En güncel <b>Türkçe Yamalı Oyunlar</b>, PS4 / PS5 kırma güncellemeleri, oyun yükleme ve teknik destek hizmetleri için bizi Instagram'dan takip edin!
+      </p>
 
-                // En uygun kırma rotasını belirle:
-                if (fw <= 5.05) {
-                    targetUrl = '505/index.html';
-                } else if (fw <= 6.72) {
-                    targetUrl = '672/index.html';
-                } else if (fw <= 8.52) {
-                    targetUrl = '700/cache.html';
-                } else if (fw <= 9.60) {
-                    targetUrl = '900/cache.html';
-                } else if (fw <= 11.02) {
-                    targetUrl = 'css/latest/index.html';
-                } else if (fw <= 13.00) {
-                    targetUrl = '1300/index.html';
-                } else if (fw <= 13.52) {
-                    targetUrl = '1352/index.html';
-                } else {
-                    targetUrl = '1352/index.html';
-                }
+      <div class="ig-features">
+        <span class="ig-feat">🎮 Yeni Çıkan Oyunlar</span>
+        <span class="ig-feat">🇹🇷 Türkçe Oyun Yamaları</span>
+        <span class="ig-feat">⚡ Hızlı Teknik Destek</span>
+        <span class="ig-feat">🛠️ Bakım &amp; Onarım</span>
+      </div>
 
-                launchBtn.href = targetUrl;
-                countdownSub.textContent = countdown + ' saniye içinde otomatik başlatılıyor... (Durdurmak için bir tuşa basın)';
+      <div class="ig-footer-box">
+        <span>Instagram Arama: <b>volkanbilgisayar</b></span>
+        <span>Takipte Kalın 🔔</span>
+      </div>
+    </section>
 
-                // Otomatik başlatma geri sayımı
-                timer = setInterval(function () {
-                    countdown--;
-                    if (countdown > 0) {
-                        countdownSub.textContent = countdown + ' saniye içinde otomatik başlatılıyor... (Durdurmak için bir tuşa basın)';
-                    } else {
-                        clearInterval(timer);
-                        countdownSub.textContent = 'Başlatılıyor, lütfen bekleyin...';
-                        window.location.href = targetUrl;
-                    }
-                }, 1000);
+    <!-- Manuel Sürüm Seçimi (Gerekirse) -->
+    <section class="manual-section">
+      <div class="manual-toggle">
+        <span>Tüm Sürümler (Manuel Liste)</span>
+        <span style="font-size: 11px; color: #64748b;">Yön Tuşları ile Seçebilirsiniz</span>
+      </div>
+      <nav class="manual-grid">
+        <a class="manual-row" href="900/cache.html">
+          <span class="fw-num">01</span>
+          <span><span class="fw-name">FW 9.00 – 9.60</span><span class="fw-desc">PSFree + Lapse // GoldHEN</span></span>
+          <span class="fw-arrow">[ SEÇ ]</span>
+        </a>
+        <a class="manual-row" href="css/latest/index.html">
+          <span class="fw-num">02</span>
+          <span><span class="fw-name">FW 9.65 – 11.02</span><span class="fw-desc">CSSFontFace // GoldHEN</span></span>
+          <span class="fw-arrow">[ SEÇ ]</span>
+        </a>
+        <a class="manual-row" href="1300/index.html">
+          <span class="fw-num">03</span>
+          <span><span class="fw-name">FW 11.50 – 13.00</span><span class="fw-desc">SlopKit // Lapse &amp; Poops</span></span>
+          <span class="fw-arrow">[ SEÇ ]</span>
+        </a>
+        <a class="manual-row" href="1352/index.html">
+          <span class="fw-num">04</span>
+          <span><span class="fw-name">FW 13.02 – 13.52</span><span class="fw-desc">SlopKit Relapse // Yeni</span></span>
+          <span class="fw-arrow">[ SEÇ ]</span>
+        </a>
+        <a class="manual-row" href="700/cache.html">
+          <span class="fw-num">05</span>
+          <span><span class="fw-name">FW 7.00 – 8.52</span><span class="fw-desc">PSFree + Lapse // GoldHEN</span></span>
+          <span class="fw-arrow">[ SEÇ ]</span>
+        </a>
+        <a class="manual-row" href="672/index.html">
+          <span class="fw-num">06</span>
+          <span><span class="fw-name">FW 6.72</span><span class="fw-desc">Klasik Kararlı Kırma</span></span>
+          <span class="fw-arrow">[ SEÇ ]</span>
+        </a>
+        <a class="manual-row" href="505/index.html">
+          <span class="fw-num">07</span>
+          <span><span class="fw-name">FW 5.05</span><span class="fw-desc">Klasik Kararlı Kırma</span></span>
+          <span class="fw-arrow">[ SEÇ ]</span>
+        </a>
+      </nav>
+    </section>
 
+    <footer class="footer-brand">
+      VOLKAN BİLGİSAYAR // PS4 &amp; PS5 Kırma, Yazılım &amp; Oyun Servisi
+    </footer>
+  </main>
+</div>
+
+<script>
+(function () {
+    var ua = navigator.userAgent;
+    var stateEl = document.getElementById('state');
+    var detEl = document.getElementById('det');
+    var mainActionBtn = document.getElementById('mainActionBtn');
+    var btnCountdownSub = document.getElementById('btnCountdownSub');
+    var targetUrl = null;
+    var countdown = 4;
+    var timer = null;
+
+    // PS4 Sürüm Tespiti
+    function getPS4Firmware() {
+        var m = ua.match(/PlayStation\s+4[\/ ]([0-9]+)\.([0-9]+)/i);
+        if (!m) return null;
+        var major = parseInt(m[1], 10);
+        var minorStr = m[2];
+        if (minorStr.length === 1) minorStr = minorStr + '0';
+        var minor = parseInt(minorStr, 10);
+        var num = major + (minor / 100);
+        var str = major + '.' + (minor < 10 ? '0' + minor : minor);
+        return { major: major, minor: minor, num: num, str: str };
+    }
+
+    var ps4Info = getPS4Firmware();
+
+    if (ps4Info) {
+        var fw = ps4Info.num;
+        var fwName = 'PS4 v' + ps4Info.str;
+
+        stateEl.innerHTML = fwName + ' <span class="ok" style="font-size:18px;">(Tespit Edildi)</span>';
+        detEl.innerHTML = 'Konsol Sürümü: <b>' + fwName + '</b> &middot; <span class="ok">Otomatik Kırma Hazır</span>';
+
+        // En uygun kırma rotasını belirle:
+        if (fw <= 5.05) {
+            targetUrl = '505/index.html';
+        } else if (fw <= 6.72) {
+            targetUrl = '672/index.html';
+        } else if (fw <= 8.52) {
+            targetUrl = '700/cache.html';
+        } else if (fw <= 9.60) {
+            targetUrl = '900/cache.html';
+        } else if (fw <= 11.02) {
+            targetUrl = 'css/latest/index.html';
+        } else if (fw <= 13.00) {
+            targetUrl = '1300/index.html';
+        } else if (fw <= 13.52) {
+            targetUrl = '1352/index.html';
+        } else {
+            targetUrl = '1352/index.html';
+        }
+
+        mainActionBtn.href = targetUrl;
+        btnCountdownSub.textContent = countdown + ' saniye içinde otomatik başlatılıyor... (Durdurmak için bir tuşa basın)';
+
+        // Otomatik geri sayım
+        timer = setInterval(function () {
+            countdown--;
+            if (countdown > 0) {
+                btnCountdownSub.textContent = countdown + ' saniye içinde otomatik başlatılıyor... (Durdurmak için bir tuşa basın)';
             } else {
-                // PC veya tanınmayan cihazdan açılmışsa
-                detectedText.innerHTML = '<span style="color:#aaa; font-size:14px;">PC / Mobil Tarayıcı (PS4 Tespit Edilmedi)</span>';
-                launchBtn.href = '900/cache.html';
-                countdownSub.textContent = 'PS4 üzerinden açtığınızda sürümünüz otomatik algılanır. Manuel seçim için tıklayın.';
+                clearInterval(timer);
+                btnCountdownSub.textContent = 'Kırma işlemi başlatılıyor, lütfen bekleyin...';
+                window.location.href = targetUrl;
             }
+        }, 1000);
 
-            // Müşteri herhangi bir tuşa veya ekrana basarsa otomatik geri sayımı durdur
-            function cancelAutoLaunch() {
-                if (timer) {
-                    clearInterval(timer);
-                    timer = null;
-                    if (countdownSub && ps4Info) {
-                        countdownSub.textContent = 'Kırmayı başlatmak için butona tıklayın veya kumandadan X tuşuna basın.';
-                    }
-                }
+    } else {
+        // PC / Mobil / Diğer tarayıcılar
+        stateEl.textContent = 'Cihaz Tespiti';
+        detEl.innerHTML = 'Tarayıcı: <b>PC / Mobil</b> &middot; PS4 üzerinden açtığınızda sürüm otomatik algılanır';
+        mainActionBtn.href = '900/cache.html';
+        btnCountdownSub.textContent = 'PS4 üzerinden açtığınızda otomatik kırma başlar. Manuel seçim için tıklayın.';
+    }
+
+    // Tuşa veya ekrana basılırsa otomatik geri sayımı iptal et
+    function cancelAutoTimer() {
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+            if (btnCountdownSub && ps4Info) {
+                btnCountdownSub.textContent = 'Kırmayı başlatmak için [ X ] tuşuna veya butona tıklayın.';
             }
+        }
+    }
 
-            window.addEventListener('keydown', function (e) {
-                var code = e.keyCode || e.which;
-                // X tuşu (Enter: 13, Space: 32)
-                if (code === 13 || code === 32) {
-                    if (targetUrl) {
-                        e.preventDefault();
-                        window.location.href = targetUrl;
-                    }
-                } else if (code >= 37 && code <= 40) { // Yön tuşları
-                    cancelAutoLaunch();
-                }
-            }, false);
+    window.addEventListener('keydown', function (e) {
+        var code = e.keyCode || e.which;
+        // Kumandada X tuşu (Enter: 13, Space: 32)
+        if (code === 13 || code === 32) {
+            if (targetUrl) {
+                e.preventDefault();
+                window.location.href = targetUrl;
+            }
+        } else if (code >= 37 && code <= 40) {
+            cancelAutoTimer();
+        }
+    }, false);
 
-            window.addEventListener('mousedown', function () {
-                cancelAutoLaunch();
-            }, false);
+    window.addEventListener('mousedown', function () {
+        cancelAutoTimer();
+    }, false);
 
-            // İlk odak dev butonda olsun
-            launchBtn.focus();
-        })();
-    </script>
+    // İlk odak butonda olsun (kumandayla doğrudan X'e basabilmek için)
+    mainActionBtn.focus();
+})();
+</script>
 
-    <script>
-        (function () {
-            var label = document.getElementById('navigation-cache-status');
-            var cache = window.applicationCache;
-            function show(message) { if (label) label.textContent = message; }
-            if (!cache) { show('[ tamam ] Menü hazır'); return; }
-            function ready() { show('[ tamam ] Ana menü önbelleğe alındı; internetsiz açılabilir'); }
-            cache.addEventListener('checking', function () { show('[ ... ] Çevrimdışı menü önbelleği kontrol ediliyor'); }, false);
-            cache.addEventListener('downloading', function () { show('[ ... ] Çevrimdışı menü önbelleği indiriliyor'); }, false);
-            cache.addEventListener('cached', ready, false);
-            cache.addEventListener('noupdate', ready, false);
-            cache.addEventListener('updateready', function () {
-                try { cache.swapCache(); } catch (error) {}
-                show('[ tamam ] Önbellek güncellendi');
-            }, false);
-            cache.addEventListener('error', function () {
-                show('[ tamam ] Kaydedilmiş önbellek hazır; internetsiz kullanılabilir');
-            }, false);
-        })();
-    </script>
+<script>
+(function () {
+    var label = document.getElementById('cache');
+    var cache = window.applicationCache;
+    function show(message, ok) {
+        if (!label) return;
+        label.textContent = message;
+        label.className = ok ? 'cacheok' : '';
+    }
+    if (!cache) { show('Menü hazır', true); return; }
+    function ready() { show('Çevrimdışı hafıza hazır — İnternetsiz kullanılabilir', true); }
+    cache.addEventListener('checking', function () { show('Çevrimdışı hafıza kontrol ediliyor...'); }, false);
+    cache.addEventListener('downloading', function () { show('Çevrimdışı hafızaya kaydediliyor...'); }, false);
+    cache.addEventListener('cached', ready, false);
+    cache.addEventListener('noupdate', ready, false);
+    cache.addEventListener('updateready', function () {
+        try { cache.swapCache(); } catch (e) {}
+        show('Önbellek güncellendi', true);
+    }, false);
+    cache.addEventListener('error', function () {
+        show('Hafızadaki önbellek hazır — Çevrimdışı kullanılabilir', true);
+    }, false);
+})();
+</script>
 </body>
 </html>
