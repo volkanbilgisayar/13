@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="tr" manifest="cache.manifest">
+
+<head>
+    <link rel="icon" type="image/png" href="../../pspulse.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS4 6.00-11.02 KIRMA MENÜSÜ // GOLDHEN v2.4b18.12</title>
+    <style>
+        :root {
+            --bg: #151515;
+            --panel: #1c1c1c;
+            --panel-2: #242424;
+            --line: #2e2e2e;
+            --line-bright: #454545;
+            --text: #f5f5f5;
+            --muted: #b5b5b5;
+            --dim: #828282;
+            --accent: #a294ff;
+            --red: #ff9b9b;
+            --amber: #e1bd72;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { background: var(--bg); }
+        html, body { min-height: 100%; }
+        body {
+            background-color: var(--bg);
+            background-image: linear-gradient(rgba(162, 148, 255, .05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(162, 148, 255, .05) 1px, transparent 1px);
+            background-size: 36px 36px;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            font: 17px/1.4 Consolas, "Liberation Mono", monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        a { color: inherit; }
+
+        .app { display: flex; flex: 1 0 auto; flex-direction: column; margin: 0 auto; padding: 14px 26px 12px; width: min(100% - 52px, 1220px); }
+
+        /* Top status bar */
+        .bar {
+            align-items: center;
+            border: 1px solid var(--line-bright);
+            display: flex;
+            font-size: 14px;
+            justify-content: space-between;
+            letter-spacing: .1em;
+            padding: 10px 16px;
+            text-transform: uppercase;
+        }
+        .bar b { color: var(--accent); font-weight: 400; }
+        .bar-fw { color: var(--dim); }
+        .bar-fw::before { color: var(--accent); content: "\25CF "; }
+
+        .layout { display: flex; flex: 1 0 auto; flex-direction: column; padding: 20px 0 0; }
+
+        /* Header */
+        .kicker { color: var(--accent); font-size: 14px; letter-spacing: .14em; margin: 0 0 12px; }
+        h1 { font-size: clamp(34px, 5vw, 56px); font-weight: 400; letter-spacing: -.07em; line-height: 1; margin: 0; }
+        h1 em { color: var(--accent); font-style: normal; }
+        .sub { color: var(--muted); font-size: 17px; margin: 13px 0 0; max-width: 720px; }
+        .boot { color: var(--dim); font-size: 14px; list-style: none; margin: 12px 0 0; }
+        .boot li { margin: 3px 0; }
+        .boot b { color: var(--accent); font-weight: 400; }
+        #UA { color: var(--dim); display: block; font-size: 12px; margin-top: 10px; overflow-wrap: anywhere; }
+        /* Offline cache stage (upstream inline script target) */
+        #cache { color: var(--dim); font-size: 13px; margin: 6px 0 0; min-height: 16px; }
+        #cache.cacheok { color: var(--accent); }
+
+        /* Status / exploit output */
+        .status {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            margin-top: 20px;
+            padding: 14px 16px;
+        }
+        .status-label {
+            border-bottom: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 14px;
+            letter-spacing: .12em;
+            margin-bottom: 11px;
+            padding: 0 4px 10px;
+            text-transform: uppercase;
+        }
+        /* logger target in src/misc.js - keep id, pre-wrap and bounds */
+        #console {
+            background: var(--panel-2);
+            border: 1px solid var(--line-bright);
+            color: var(--text);
+            font: inherit;
+            font-size: 14px;
+            line-height: 1.45;
+            max-height: 132px;
+            min-height: 42px;
+            overflow: auto;
+            padding: 10px 14px;
+            white-space: pre-wrap;
+        }
+
+        /* Controls */
+        .controls { border: 1px solid var(--line); margin-top: 14px; padding: 14px; }
+        .section-title {
+            border-bottom: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 14px;
+            letter-spacing: .12em;
+            margin-bottom: 11px;
+            padding: 0 4px 10px;
+            text-transform: uppercase;
+        }
+        #kernel-options { align-items: center; display: flex; flex-wrap: wrap; gap: 10px 14px; }
+        .chain-label { color: var(--muted); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+        .chain-options { display: flex; gap: 8px; }
+        #kernel-options input[type="radio"] { height: 1px; opacity: 0; position: absolute; width: 1px; }
+        .chain-option,
+        #jeilbrek,
+        #reloadBtn,
+        .auto-jb-label {
+            background: var(--panel);
+            border: 1px solid var(--line-bright);
+            color: var(--text);
+            cursor: pointer;
+            font: inherit;
+            min-height: 48px;
+            padding: 10px 14px;
+        }
+        #kernel-options input[type="radio"]:focus + .chain-option,
+        #kernel-options input[type="radio"]:checked + .chain-option,
+        .chain-option:hover,
+        #jeilbrek:hover,
+        #jeilbrek:focus,
+        #reloadBtn:hover,
+        #reloadBtn:focus,
+        .auto-jb-label:hover {
+            background: var(--panel-2);
+            border-color: var(--accent);
+            color: var(--accent);
+            outline: 0;
+        }
+        #kernel-options input[type="radio"]:focus + .chain-option,
+        #jeilbrek:focus,
+        #reloadBtn:focus { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
+        #jeilbrek:disabled { cursor: wait; opacity: .55; }
+        .auto-jb { align-items: center; display: flex; gap: 8px; }
+        .auto-jb-label { align-items: center; display: flex; font-size: 14px; text-transform: none; }
+        .auto-jb-label:focus { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent); outline: 0; }
+        #autoJbInput { height: 18px; width: 18px; }
+
+        /* Footer */
+        .foot {
+            border-top: 1px solid var(--line);
+            color: var(--dim);
+            font-size: 13px;
+            margin-top: 16px;
+            padding: 12px 4px 2px;
+            text-align: center;
+        }
+        .foot div { margin: 2px 0; }
+
+        @media (max-width: 760px) {
+            body { overflow: auto; }
+            .app { padding: 8px 10px; width: min(100% - 20px, 560px); }
+            .bar { font-size: 12px; padding: 8px 12px; }
+            .layout { padding-top: 14px; }
+            h1 { font-size: 38px; }
+            .sub { font-size: 16px; }
+            #kernel-options { align-items: flex-start; flex-direction: column; }
+            .chain-options { width: 100%; }
+            .chain-option { flex: 1; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header class="bar">
+            <span><b>PS4 KIRMA</b> // TÜRKÇE MENÜ</span>
+            <span class="bar-fw">Sürüm 6.00 - 11.02 Uyumlu</span>
+        </header>
+
+        <main class="layout">
+            <p class="kicker">$ sistem --cssfontface</p>
+            <h1>CSSFontFace <em>6.00-11.02</em> Kırma</h1>
+            <p class="sub">Otomatik ve Çevrimdışı GoldHEN Kırma Sistemi.</p>
+            <ul class="boot">
+                <li>[ <b>HAZIR</b> ] CSSFontFace kırma zinciri devrede</li>
+                <li>[ <b>HAZIR</b> ] GoldHEN v2.4b18.12 yüklendi</li>
+                <li>[ <b>HAZIR</b> ] Çevrimdışı hafıza devrede</li>
+            </ul>
+            <p id="UA">Cihaz / Tarayıcı:</p>
+            <p id="cache">Çevrimdışı hafıza kontrol ediliyor...</p>
+
+            <div class="status">
+                <div class="status-label">İşlem Durumu ve Günlük</div>
+                <pre id="console">Hazır. Kırma işlemi bekleniyor...</pre>
+            </div>
+
+            <section class="controls">
+                <div class="section-title">Kırma Kontrolleri</div>
+                <form id="kernel-options">
+                    <span class="chain-label">Kırma Yöntemi (Kernel)</span>
+                    <div class="chain-options">
+                        <input type="radio" name="kernel" id="netctrl-exploit" value="netctrl">
+                        <label class="chain-option" for="netctrl-exploit">Poops</label>
+                        <input type="radio" name="kernel" id="lapse-exploit" value="lapse">
+                        <label class="chain-option" for="lapse-exploit">Lapse (Önerilen)</label>
+                    </div>
+                    <button id="jeilbrek" type="button">Kırmayı Başlat</button>
+                    <button id="reloadBtn" type="button">Yenile</button>
+                    <div class="auto-jb">
+                        <label class="auto-jb-label" for="autoJbInput" id="autoJbLabel">Otomatik Kırma</label>
+                        <input id="autoJbInput" type="checkbox">
+                    </div>
+                </form>
+            </section>
+
+            <section class="menu" style="margin-top: 14px; border: 1px solid var(--line-bright); padding: 14px; background: var(--panel);">
+                <div class="menu-top" style="border-bottom: 1px solid var(--line); margin-bottom: 11px; padding: 0 4px 10px;">
+                    <span class="menu-title" style="color: var(--accent); font-size: 14px; text-transform: uppercase;">MÜŞTERİ KULLANIM REHBERİ</span>
+                </div>
+                <div style="font-size: 13px; line-height: 1.6; color: var(--muted); padding: 4px 6px;">
+                    <p style="margin-bottom: 6px;">1. <b>Otomatik Kırma:</b> Sayfa açıldığında sağ alttaki "Otomatik Kırma" kutusu işaretliyse geri sayım başlar ve işlem kendiliğinden yapılır.</p>
+                    <p style="margin-bottom: 6px;">2. <b>Manuel Kırma:</b> Geri sayım başlamazsa veya durdurduysanız <b>"Kırmayı Başlat"</b> butonuna basmanız yeterlidir.</p>
+                    <p style="margin-bottom: 6px;">3. <b>Çevrimdışı Kullanım:</b> Sayfa bir kere tamamen açıldığında hafızaya alınır. İnterneti kapatsanız bile bu adresten kırma yapabilirsiniz.</p>
+                    <p>4. <b>Takılma Olursa:</b> "Bellek Yetersiz" uyarısı çıkarsa TAMAM deyin. Konsol kilitlenirse veya kapanırsa PS tuşundan açıp tarayıcıyı tekrar açarak deneyin.</p>
+                </div>
+            </section>
+
+            <footer class="foot">
+                <div>PS4 Türkçe Kırma Arayüzü // Güvenli ve Kolay Kullanım</div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="src/main.js"></script>
+    <script src="includes/script.js"></script>
+
+    <script>
+    (function () {
+        var cache = window.applicationCache;
+        var status = document.getElementById('cache');
+
+        function show(message, ready) {
+            if (!status) return;
+            status.textContent = message;
+            status.className = ready ? 'cacheok' : '';
+        }
+
+        if (!cache || !document.documentElement.hasAttribute('manifest')) {
+            show('Uygulama önbelleği kullanılamıyor');
+            return;
+        }
+
+        cache.addEventListener('checking', function () {
+            show('Çevrimdışı hafıza kontrol ediliyor...');
+        }, false);
+        cache.addEventListener('downloading', function () {
+            show('Çevrimdışı hafızaya yükleniyor...');
+        }, false);
+        cache.addEventListener('progress', function (event) {
+            if (event && event.total > 0) {
+                show('Hafızaya alınıyor: %' + Math.round(event.loaded / event.total * 100));
+            }
+        }, false);
+        cache.addEventListener('cached', function () {
+            show('Çevrimdışı kullanım için hazırlandı (Hafızada)', true);
+        }, false);
+        cache.addEventListener('noupdate', function () {
+            show('Hafızada yüklü — Çevrimdışı kullanıma hazır', true);
+        }, false);
+        cache.addEventListener('updateready', function () {
+            show('Önbellek güncellemesi hazır', true);
+        }, false);
+        cache.addEventListener('error', function () {
+            if (cache.status === cache.IDLE ||
+                cache.status === cache.UPDATEREADY) {
+                show('Hafızada yüklü — Çevrimdışı kullanıma hazır', true);
+            } else {
+                show('Önbellek alınamadı — İnterneti kontrol edip tekrar deneyin');
+            }
+        }, false);
+        cache.addEventListener('obsolete', function () {
+            show('Önbellek eski — Tarayıcı geçmişini temizleyin');
+        }, false);
+
+        if (!navigator.onLine) {
+            show('Çevrimdışı mod — Hafızadaki sürüm kullanılıyor', true);
+        } else if (cache.status === cache.UPDATEREADY) {
+            show('Önbellek güncellendi — Yeniden yükleniyor...', true);
+        } else if (cache.status === cache.IDLE) {
+            show('Hafızada yüklü — Çevrimdışı kullanıma hazır', true);
+        }
+    }());
+    </script>
+</body>
+
+</html>

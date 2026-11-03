@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="tr" manifest="cache.manifest">
+
+<head>
+    <link rel="icon" type="image/png" href="../pspulse.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS4 5.05 KIRMA MENÜSÜ // GOLDHEN</title>
+    <style>
+        :root {
+            --bg: #151515;
+            --panel: #1c1c1c;
+            --panel-2: #242424;
+            --line: #2e2e2e;
+            --line-bright: #454545;
+            --text: #f5f5f5;
+            --muted: #b5b5b5;
+            --dim: #828282;
+            --accent: #a294ff;
+            --red: #ff9b9b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { background: #151515; }
+        html, body { min-height: 100%; }
+        body {
+            background-color: #151515;
+            background-image: linear-gradient(rgba(162, 148, 255, .05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(162, 148, 255, .05) 1px, transparent 1px);
+            background-size: 36px 36px;
+            color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            font: 17px/1.4 Consolas, "Liberation Mono", monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        a { color: inherit; }
+
+        .app { display: flex; flex: 1 0 auto; flex-direction: column; margin: 0 auto; padding: 14px 26px 12px; width: 100%; max-width: 1220px; }
+
+        /* Top status bar */
+        .bar {
+            align-items: center;
+            border: 1px solid #454545;
+            display: flex;
+            font-size: 14px;
+            justify-content: space-between;
+            letter-spacing: .1em;
+            padding: 10px 16px;
+            text-transform: uppercase;
+        }
+        .bar b { color: #a294ff; font-weight: 400; }
+        .bar-fw { color: #828282; }
+        .bar-fw::before { color: #a294ff; content: "\25CF "; }
+
+        .layout { display: flex; flex: 1 0 auto; flex-direction: column; padding: 20px 0 0; }
+
+        /* Header */
+        .kicker { color: #a294ff; font-size: 14px; letter-spacing: .14em; margin: 0 0 12px; }
+        h1 { font-size: 56px; font-weight: 400; letter-spacing: -.07em; line-height: 1; margin: 0; }
+        h1 em { color: #a294ff; font-style: normal; }
+        .sub { color: #b5b5b5; font-size: 17px; margin: 13px 0 0; max-width: 720px; }
+        .boot { color: #828282; font-size: 14px; list-style: none; margin: 12px 0 0; }
+        .boot li { margin: 3px 0; }
+        .boot b { color: #a294ff; font-weight: 400; }
+
+        /* Status */
+        .status {
+            background: #1c1c1c;
+            border: 1px solid #2e2e2e;
+            margin-top: 20px;
+            padding: 14px 16px;
+        }
+        #progress { margin: 0; padding: 0; }
+        #msgs2 {
+            border-left: 2px solid #a294ff;
+            color: #a294ff;
+            font-size: 17px;
+            line-height: 1.45;
+            min-height: 24px;
+            padding: 4px 10px;
+        }
+        #msgs2 h1, #msgs h1 { color: #f5f5f5 !important; font-size: 16px; font-weight: 400; line-height: 1.45; margin: 0; }
+        #menu { display: none; }
+        #msgs { border-left: 2px solid #a294ff; color: #f5f5f5; font-size: 16px; line-height: 1.45; min-height: 24px; padding: 4px 10px; }
+
+        /* Controls */
+        .controls { border: 1px solid #2e2e2e; margin-top: 14px; padding: 14px; }
+        .section-title {
+            border-bottom: 1px solid #2e2e2e;
+            color: #b5b5b5;
+            font-size: 14px;
+            letter-spacing: .12em;
+            margin-bottom: 11px;
+            padding: 0 4px 10px;
+            text-transform: uppercase;
+        }
+        .grid-goldhen { display: -webkit-flex; display: flex; -webkit-flex-wrap: wrap; flex-wrap: wrap; margin: -4px -4px 10px; }
+        .grid { display: -webkit-flex; display: flex; -webkit-flex-wrap: wrap; flex-wrap: wrap; margin: -4px; }
+        .grid-goldhen button,
+        .grid button {
+            background: #1c1c1c;
+            border: 1px solid #454545;
+            color: #f5f5f5;
+            cursor: pointer;
+            font: inherit;
+            min-height: 48px;
+            padding: 10px 14px;
+            text-align: left;
+            width: calc(25% - 8px);
+            margin: 4px;
+        }
+        .grid-goldhen button { width: calc(50% - 8px); }
+        .grid-goldhen button:hover, .grid-goldhen button:focus,
+        .grid button:hover, .grid button:focus {
+            background: #242424;
+            border-color: #a294ff;
+            color: #a294ff;
+            outline: 0;
+        }
+        .grid-goldhen button:focus, .grid button:focus { box-shadow: 0 0 0 2px #151515, 0 0 0 4px #a294ff; }
+
+        /* Footer */
+        .foot {
+            border-top: 1px solid #2e2e2e;
+            color: #828282;
+            font-size: 13px;
+            margin-top: 16px;
+            padding: 12px 4px 2px;
+            text-align: center;
+        }
+        .foot div { margin: 2px 0; }
+
+        @media (max-width: 820px) {
+            body { overflow: auto; }
+            .app { padding: 8px 10px; width: 100%; max-width: 560px; }
+            .bar { font-size: 12px; padding: 8px 12px; }
+            .layout { padding-top: 14px; }
+            h1 { font-size: 38px; }
+            .sub { font-size: 16px; }
+            .grid button { width: calc(50% - 8px); }
+            .grid-goldhen button { width: calc(50% - 8px); }
+        }
+
+        @media (max-width: 430px) {
+            .grid button, .grid-goldhen button { width: calc(100% - 8px); }
+            h1 { font-size: 34px; }
+        }
+    </style>
+    <script src="exploit.js"></script>
+</head>
+
+<body onload="start505Host();">
+    <script>
+        var host505Started = false;
+        var host505Watchdog = null;
+
+        function storage505Get(name, fallback) {
+            try {
+                var value = localStorage.getItem(name);
+                return value === null ? fallback : value;
+            } catch (error) {
+                return fallback;
+            }
+        }
+
+        function storage505Set(name, value) {
+            try { localStorage.setItem(name, String(value)); } catch (error) {}
+        }
+
+        function storage505Remove(name) {
+            try { localStorage.removeItem(name); } catch (error) {}
+        }
+
+        function session505Get(name) {
+            try { return sessionStorage.getItem(name); } catch (error) { return null; }
+        }
+
+        function session505Set(name, value) {
+            try { sessionStorage.setItem(name, String(value)); } catch (error) {}
+        }
+
+        function session505Remove(name) {
+            try { sessionStorage.removeItem(name); } catch (error) {}
+        }
+
+        function status505(message) {
+            var element = document.getElementById('msgs2');
+            if (element) element.textContent = message;
+        }
+
+        function isSupported505() {
+            var ua = navigator.userAgent || '';
+            return /PlayStation 4/i.test(ua) &&
+                /PlayStation\s+4[\/ ]5\.05(?:[^0-9]|$)/i.test(ua);
+        }
+
+        function run505Once() {
+            if (host505Started) return;
+            host505Started = true;
+            status505('Kırma işlemi başlatılıyor...');
+            try {
+                exploit();
+            } catch (error) {
+                status505('Başlatma başarısız oldu. Tarayıcıyı kapatıp açarak tekrar deneyin.');
+                var menuMessage = document.getElementById('msgs');
+                if (menuMessage) {
+                    menuMessage.textContent = error && error.message ?
+                        error.message : String(error);
+                }
+            }
+        }
+
+        function start505Host() {
+            if (!isSupported505()) {
+                status505('Desteklenmeyen cihaz veya sürüm. PS4 5.05 gereklidir.');
+                return;
+            }
+
+            var ac = window.applicationCache;
+            var hasManifest = document.documentElement.hasAttribute('manifest');
+            if (!ac || !hasManifest) {
+                status505('Çevrimdışı önbellek kullanılamıyor. Çevrimiçi mod başlatılıyor...');
+                setTimeout(run505Once, 250);
+                return;
+            }
+
+            var finished = false;
+            function finish() {
+                if (finished) return false;
+                finished = true;
+                if (host505Watchdog !== null) {
+                    clearTimeout(host505Watchdog);
+                    host505Watchdog = null;
+                }
+                return true;
+            }
+
+            function ready(message) {
+                if (!finish()) return;
+                storage505Set('cached505', 'yes');
+                session505Remove('cacheReload505');
+                status505(message);
+                setTimeout(run505Once, 500);
+            }
+
+            function updateReady() {
+                if (!finish()) return;
+                storage505Set('cached505', 'yes');
+                try { ac.swapCache(); } catch (error) {}
+                if (session505Get('cacheReload505') !== 'yes') {
+                    session505Set('cacheReload505', 'yes');
+                    status505('Önbellek güncellendi. Sayfa yenileniyor...');
+                    setTimeout(function () { window.location.reload(); }, 750);
+                } else {
+                    status505('Önbellek güncellendi. Başlatılıyor...');
+                    setTimeout(run505Once, 500);
+                }
+            }
+
+            function cacheError() {
+                if (!finish()) return;
+                storage505Remove('cached505');
+                status505('Önbellek alınamadı. İnterneti kontrol edip tekrar deneyin.');
+            }
+
+            ac.addEventListener('downloading', function () {
+                status505('Çevrimdışı hafızaya yükleniyor...');
+            }, false);
+            ac.addEventListener('progress', function (event) {
+                if (event && event.total > 0) {
+                    status505('Çevrimdışı hafızaya yükleniyor: %' +
+                        Math.round(100 * event.loaded / event.total));
+                }
+            }, false);
+            ac.addEventListener('cached', function () {
+                ready('Hafızaya alındı. Başlatılıyor...');
+            }, false);
+            ac.addEventListener('noupdate', function () {
+                ready('Çevrimdışı hafıza hazır. Başlatılıyor...');
+            }, false);
+            ac.addEventListener('updateready', updateReady, false);
+            ac.addEventListener('error', cacheError, false);
+            ac.addEventListener('obsolete', function () {
+                if (!finish()) return;
+                storage505Remove('cached505');
+                status505('Önbellek eski. Tarayıcı geçmişini temizleyin.');
+            }, false);
+
+            if (ac.status === ac.UPDATEREADY) {
+                updateReady();
+            } else if (ac.status === ac.IDLE) {
+                ready('Çevrimdışı hafıza hazır. Başlatılıyor...');
+            } else {
+                status505('Çevrimdışı önbellek bekleniyor...');
+                host505Watchdog = setTimeout(function () {
+                    if (!finish()) return;
+                    status505('Önbellek kontrolü zaman aşımına uğradı. Manuel olarak tekrar deneyin.');
+                }, 60000);
+            }
+        }
+    </script>
+
+    <div class="app">
+        <header class="bar">
+            <span><b>PS4 KIRMA</b> // TÜRKÇE MENÜ</span>
+            <span class="bar-fw">Sürüm 5.05 Uyumlu</span>
+        </header>
+
+        <main class="layout">
+            <p class="kicker">$ sistem --fw-505</p>
+            <h1>Sürüm <em>5.05</em> Kırma</h1>
+            <p class="sub">Çevrimdışı ve Otomatik GoldHEN Kırma Menüsü.</p>
+            <ul class="boot">
+                <li>[ <b>HAZIR</b> ] Kırma sistemi devrede</li>
+                <li>[ <b>HAZIR</b> ] Çevrimdışı hafıza devrede</li>
+            </ul>
+
+            <div class="status">
+                <div id="progress">
+                    <div id="msgs2">Yükleniyor... Lütfen Bekleyin</div>
+                </div>
+                <div id="menu">
+                    <div id="msgs">Kırma İşlemine Hazır</div>
+                </div>
+            </div>
+
+            <div class="controls" id="controls" style="display: none;">
+                <div class="section-title">GoldHEN Kırma Sürümleri</div>
+                <div class="grid-goldhen">
+                    <button onclick="load_goldhen18()" onmouseover="msgs.innerHTML='PS4 5.05 İçin GoldHEN v2.4b18.12 (En Güncel Sürüm)'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        GoldHEN v2.4b18.12 (En Güncel)
+                    </button>
+                    <button onclick="load_goldhen5()" onmouseover="msgs.innerHTML='PS4 5.05 İçin GoldHEN v2.4b18.10 (Kararlı Sürüm)'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        GoldHEN v2.4b18.10 (Kararlı)
+                    </button>
+                </div>
+
+                <div class="section-title">Yardımcı Araçlar (Payloadlar)</div>
+                <div class="grid">
+                    <button onclick="load_ftp()"
+                        onmouseover="msgs.innerHTML='FTP Sunucusu - Bilgisayardan PS4 dosyalarına erişin'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        FTP Sunucusu
+                    </button>
+
+                    <button onclick="load_ps4debug()" onmouseover="msgs.innerHTML='PS4 Hata Ayıklayıcı - Geliştirici ve hile araçlarını etkinleştirin'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        PS4 Hata Ayıklama (Debug)
+                    </button>
+
+                    <button onclick="load_app2usb()"
+                        onmouseover="msgs.innerHTML='App2USB - Yüklü oyunları harici USB belleğe aktarın'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        Oyunları USB'ye Taşı (App2USB)
+                    </button>
+
+                    <button onclick="load_backup()" onmouseover="msgs.innerHTML='Yedekleme - Sistem ve kayıt verilerini USB belleğe yedekleyin'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        Sistem Yedekle (Backup)
+                    </button>
+
+                    <button onclick="load_restore()" onmouseover="msgs.innerHTML='Geri Yükleme - Daha önce alınan sistem yedeğini geri yükleyin'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        Yedeği Geri Yükle (Restore)
+                    </button>
+
+                    <button onclick="load_disableUpdates()"
+                        onmouseover="msgs.innerHTML='Güncellemeleri Engelle - Otomatik sistem güncellemelerini kapatır'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        Güncellemeleri Kapat
+                    </button>
+
+                    <button onclick="load_enableUpdates()"
+                        onmouseover="msgs.innerHTML='Güncellemeleri Aç - Sistem güncellemelerine tekrar izin verir'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        Güncellemeleri Aç
+                    </button>
+
+                    <button onclick="load_rifRenamer()" onmouseover="msgs.innerHTML='RIF Lisans Düzenleyici - Sahte lisans dosyalarını düzeltin'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        Lisans Düzenle (RIF)
+                    </button>
+
+                    <button onclick="load_kernelClock()" onmouseover="msgs.innerHTML='Sistem Saati - Konsol dahili saatini ayarlayın'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        Sistem Saati (Kernel Clock)
+                    </button>
+
+                    <button onclick="load_appcacheInstall()"
+                        onmouseover="msgs.innerHTML='Önbellek Yükleyici - Tarayıcı önbelleğini kurun'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        Önbellek Yükle
+                    </button>
+
+                    <button onclick="load_historyBlocker()"
+                        onmouseover="msgs.innerHTML='Geçmiş Engelleyici - Tarayıcı geçmişinin kaydedilmesini engeller'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        Geçmişi Engelle
+                    </button>
+
+                    <button onclick="load_pupDecrypt()"
+                        onmouseover="msgs.innerHTML='PUP Şifre Çözücü - PS4 güncelleme dosyalarının şifresini çözer'"
+                        onmouseout="msgs.innerHTML='Kırma İşlemine Hazır'">
+                        PUP Şifre Çöz
+                    </button>
+                </div>
+            </div>
+
+            <div class="controls" style="margin-top: 14px; border-color: var(--line-bright);">
+                <div class="section-title" style="color: var(--accent);">MÜŞTERİ BİLGİLENDİRME & KULLANIM REHBERİ</div>
+                <div style="font-size: 13px; line-height: 1.6; color: var(--muted); padding: 4px 6px;">
+                    <p style="margin-bottom: 6px;">1. <b>Kırma İşlemi:</b> Açılan ekranda <b>"GoldHEN v2.4b18.12 (En Güncel)"</b> seçeneğine tıklayın. Kırma birkaç saniye içinde tamamlanacaktır.</p>
+                    <p style="margin-bottom: 6px;">2. Ekranda "Yetersiz Bellek" uyarısı verirse TAMAM tuşuna basarak devam edin.</p>
+                    <p style="margin-bottom: 6px;">3. <b>Çevrimdışı Kullanım:</b> Sayfa ilk açılışta önbelleğe (hafızaya) kaydedilir. İnternet olmadan da istediğiniz zaman kullanabilirsiniz.</p>
+                    <p>4. Nadiren donma veya kapanma olursa konsolu açıp tarayıcıyı yeniden başlatarak işlemi tekrarlayın.</p>
+                </div>
+            </div>
+
+            <footer class="foot">
+                <div>PS4 Türkçe Kırma Arayüzü // Güvenli ve Kolay Kullanım</div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        function success() {
+            document.getElementById("menu").style.display = "block";
+            document.getElementById("progress").style.display = "none";
+            document.getElementById("controls").style.display = "block";
+        }
+
+        function allset() {
+            msgs.innerHTML = LoadedMSG;
+        }
+
+        var payloadBusy = false;
+        var PLfile = null;
+        var LoadedMSG = '';
+        var runPAYLOAD1 = null;
+        var allowedPayloads = {
+            'goldhen.bin': true,
+            'goldhen10.bin': true,
+            'ftp.bin': true,
+            'ps4debug.bin': true,
+            'app2usb.bin': true,
+            'backup.bin': true,
+            'restore.bin': true,
+            'disable-updates.bin': true,
+            'enable-updates.bin': true,
+            'rif-renamer.bin': true,
+            'Kernel-Clock.bin': true,
+            'appcache-install.bin': true,
+            'history-blocker.bin': true,
+            'pup-decrypt.bin': true
+        };
+
+        function payloadError(message) {
+            payloadBusy = false;
+            msgs.textContent = message;
+        }
+
+        function load_payload() {
+            if (payloadBusy) return;
+            if (!allowedPayloads[PLfile]) {
+                payloadError('Bilinmeyen araç seçildi. Sayfayı yenileyin.');
+                return;
+            }
+
+            payloadBusy = true;
+            var requestedPayload = PLfile;
+            var req1 = new XMLHttpRequest();
+            req1.open('GET', requestedPayload, true);
+            req1.responseType = 'arraybuffer';
+            req1.timeout = 15000;
+            req1.ontimeout = function () {
+                payloadError('İstek zaman aşımına uğradı. Yeniden deneyin.');
+            };
+            req1.onerror = function () {
+                payloadError('İstek başarısız oldu. Hafızadaki dosyaları kontrol edin.');
+            };
+            req1.onabort = function () {
+                payloadError('İstek iptal edildi. Yeniden deneyin.');
+            };
+            req1.onreadystatechange = function () {
+                if (req1.readyState !== 4) return;
+                req1.onreadystatechange = null;
+                if (req1.status !== 200 || !req1.response ||
+                    req1.response.byteLength === 0) {
+                    payloadError('Dosya bulunamadı. Devam etmeyin.');
+                    return;
+                }
+                if (req1.response.byteLength > 0x200000) {
+                    payloadError('Dosya ayrılan bellek alanı için çok büyük.');
+                    return;
+                }
+
+                try {
+                    var paddingSize = (4 - (req1.response.byteLength % 4)) % 4;
+                    var padding1 = new Uint8Array(paddingSize);
+                    var tmp1 = new Uint8Array(req1.response.byteLength + padding1.byteLength);
+                    tmp1.set(new Uint8Array(req1.response), 0);
+                    tmp1.set(padding1, req1.response.byteLength);
+                    var shellcode1 = new Uint32Array(tmp1.buffer);
+                    var code_addr1 = new int64(0x26100000, 0x00000009);
+                    p.syscall(477, code_addr1, 0x300000, 7, 0x41000, -1, 0);
+                    for (var i = 0; i < shellcode1.length; i++) {
+                        p.write4(code_addr1.add32(0x100000 + i * 4), shellcode1[i]);
+                    }
+                    runPAYLOAD1 = function () {
+                        p.fcall(code_addr1);
+                        PLfile = null;
+                        for (var x = 0; x < 0x300000; x += 8) {
+                            p.write8(code_addr1.add32(x), 0);
+                        }
+                        payloadBusy = false;
+                        runPAYLOAD1 = null;
+                        setTimeout(allset, 50);
+                    };
+                    setTimeout(runPAYLOAD1, 100);
+                } catch (error) {
+                    payloadError('Çalıştırma başarısız oldu. Sayfayı yenileyin.');
+                }
+            };
+            req1.send(null);
+        }
+
+        function load_goldhen18() {
+            msgs.innerHTML = "GoldHEN v2.4b18.12 Yükleniyor... Lütfen Bekleyin";
+            LoadedMSG = "GoldHEN v2.4b18.12 Başarıyla Yüklendi ✔";
+            PLfile = "goldhen.bin";
+            load_payload();
+        }
+
+        function load_goldhen5() {
+            msgs.innerHTML = "GoldHEN v2.4b18.10 Yükleniyor... Lütfen Bekleyin";
+            LoadedMSG = "GoldHEN v2.4b18.10 Başarıyla Yüklendi ✔";
+            PLfile = "goldhen10.bin";
+            load_payload();
+        }
+
+        function load_ftp() {
+            msgs.innerHTML = "FTP Sunucusu Başlatılıyor... Lütfen Bekleyin";
+            LoadedMSG = "FTP Sunucusu Başlatıldı ✔ (Port: 1337)";
+            PLfile = "ftp.bin";
+            load_payload();
+        }
+
+        function load_ps4debug() {
+            msgs.innerHTML = "PS4Debug Yükleniyor... Lütfen Bekleyin";
+            LoadedMSG = "PS4Debug Başarıyla Yüklendi ✔";
+            PLfile = "ps4debug.bin";
+            load_payload();
+        }
+
+        function load_app2usb() {
+            msgs.innerHTML = "App2USB Yükleniyor... Lütfen Bekleyin";
+            LoadedMSG = "App2USB Başarıyla Yüklendi ✔";
+            PLfile = "app2usb.bin";
+            load_payload();
+        }
+
+        function load_backup() {
+            msgs.innerHTML = "Yedekleme Başlatılıyor... Lütfen Bekleyin";
+            LoadedMSG = "Yedekleme Başarıyla Yüklendi ✔";
+            PLfile = "backup.bin";
+            load_payload();
+        }
+
+        function load_restore() {
+            msgs.innerHTML = "Geri Yükleme Başlatılıyor... Lütfen Bekleyin";
+            LoadedMSG = "Geri Yükleme Başarıyla Yüklendi ✔";
+            PLfile = "restore.bin";
+            load_payload();
+        }
+
+        function load_disableUpdates() {
+            msgs.innerHTML = "Güncelleme Engelleme Yükleniyor... Lütfen Bekleyin";
+            LoadedMSG = "Sistem Güncellemeleri Engellendi ✔";
+            PLfile = "disable-updates.bin";
+            load_payload();
+        }
+
+        function load_enableUpdates() {
+            msgs.innerHTML = "Güncellemeler Açılıyor... Lütfen Bekleyin";
+            LoadedMSG = "Sistem Güncellemeleri Etkinleştirildi ✔";
+            PLfile = "enable-updates.bin";
+            load_payload();
+        }
+
+        function load_rifRenamer() {
+            msgs.innerHTML = "RIF Düzenleyici Yükleniyor... Lütfen Bekleyin";
+            LoadedMSG = "RIF Lisans Düzenleyici Yüklendi ✔";
+            PLfile = "rif-renamer.bin";
+            load_payload();
+        }
+
+        function load_kernelClock() {
+            msgs.innerHTML = "Sistem Saati Ayarlanıyor... Lütfen Bekleyin";
+            LoadedMSG = "Sistem Saati Ayarlandı ✔";
+            PLfile = "Kernel-Clock.bin";
+            load_payload();
+        }
+
+        function load_appcacheInstall() {
+            msgs.innerHTML = "Önbellek Yükleniyor... Lütfen Bekleyin";
+            LoadedMSG = "Önbellek Kurulumu Başarılı ✔";
+            PLfile = "appcache-install.bin";
+            load_payload();
+        }
+
+        function load_historyBlocker() {
+            msgs.innerHTML = "Geçmiş Engelleyici Yükleniyor... Lütfen Bekleyin";
+            LoadedMSG = "Geçmiş Engellendi ✔";
+            PLfile = "history-blocker.bin";
+            load_payload();
+        }
+
+        function load_pupDecrypt() {
+            msgs.innerHTML = "PUP Şifre Çözücü Yükleniyor... Lütfen Bekleyin";
+            LoadedMSG = "PUP Şifre Çözücü Başlatıldı ✔";
+            PLfile = "pup-decrypt.bin";
+            load_payload();
+        }
+    </script>
+</body>
+
+</html>

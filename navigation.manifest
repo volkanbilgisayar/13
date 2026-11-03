@@ -1,0 +1,15 @@
+CACHE MANIFEST
+# version-turkish-v1
+# navigation: cevrimdisi ana menu
+
+
+CACHE:
+./
+index.html
+pspulse.png
+700/version-selector.html
+900/version-selector.html
+css/version-selector.html
+
+NETWORK:
+*
